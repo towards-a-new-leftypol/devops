@@ -85,29 +85,29 @@ in
     maxMemory = 1024;
   };
 
-  security.acme = {
-    email = "paul_cockshott@protonmail.com";
-    acceptTerms = true;
-    certs."leftypol.org" = {
-      #webroot = acmeRoot;
-      user = "nginx";
-      group = "nginx";
-      allowKeysForGroup = true;
-      extraDomains = {
-        # "something.leftypol.org" = null;
-        "dev.leftypol.org" = null;
-      };
-    };
-    # certs."dev.leftypol.org" = {
-    #   group = "nginx";
-    #   user = "nginx";
-    #   #extraDomainNames = [ "leftypol.org" ];
-    #   extraDomains = {
-    #     # "something.leftypol.org" = null;
-    #     "leftypol.org" = null;
-    #   };
-    # };
-  };
+  # security.acme = {
+  #   email = "paul_cockshott@protonmail.com";
+  #   acceptTerms = true;
+  #   certs."leftypol.org" = {
+  #     #webroot = acmeRoot;
+  #     user = "nginx";
+  #     group = "nginx";
+  #     allowKeysForGroup = true;
+  #     extraDomains = {
+  #       # "something.leftypol.org" = null;
+  #       "dev.leftypol.org" = null;
+  #     };
+  #   };
+  #   # certs."dev.leftypol.org" = {
+  #   #   group = "nginx";
+  #   #   user = "nginx";
+  #   #   #extraDomainNames = [ "leftypol.org" ];
+  #   #   extraDomains = {
+  #   #     # "something.leftypol.org" = null;
+  #   #     "leftypol.org" = null;
+  #   #   };
+  #   # };
+  # };
 
   services.nginx = {
     enable = true;
@@ -116,8 +116,8 @@ in
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
-      enableACME = true;
-      forceSSL = true;
+      #enableACME = true;
+      #forceSSL = true;
       #acmeRoot = acmeRoot;
       #useACMEHost = "leftypol.org";
       #addSSL = true;
@@ -139,7 +139,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
+        #{ addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
     
