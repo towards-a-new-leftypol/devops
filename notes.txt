@@ -1,0 +1,108 @@
+##
+# Container Creation
+# ------------------
+#
+# Creation of the base container image.
+# This will be akin to a virtual machine running nixos
+# with a blank configuration.nix
+# (which we will change from inside the container)
+##
+
+
+# Create the nixos root filesystem (from a running nixos environment)
+# using nixos-generate. The output of these commands will be a path
+# to a tarball, copy these two tarballs to a local directory.
+
+nixos-generate -c configuration.nix -f lxc
+# cp /nixos/store/<hash>-nixos-system-x86_64-linux_2.tar.xz ./metadata.tar.xz
+
+nixos-generate -c configuration.nix -f lxc-metadata
+# cp /nixos/store/<hash>-nixos-system-x86_64-linux_2.tar.xz .
+
+
+# import the image
+lxc image import ./metadata.tar.xz ./nixos-system-x86_64-linux_2.tar.xz --alias=AlunyasNipple
+
+# verify
+lxc image ls
+
+# you should something like this:
++---------------+--------------+--------+-------------+--------+-----------+----------+-----------------------------+
+|     ALIAS     | FINGERPRINT  | PUBLIC | DESCRIPTION |  ARCH  |   TYPE    |   SIZE   |         UPLOAD DATE         |
++---------------+--------------+--------+-------------+--------+-----------+----------+-----------------------------+
+| AlunyasNipple | 185f152385ed | no     | NixOS       | x86_64 | CONTAINER | 189.12MB | Nov 5, 2020 at 4:46am (UTC) |
++---------------+--------------+--------+-------------+--------+-----------+----------+-----------------------------+
+
+# init the container
+lxc init AlunyasNipple AlunyasNipple
+
+# set security.nesting to true 
+lxc config set AlunyasNipple security.nesting true
+
+# boot
+lxc start AlunyasNipple
+
+lxc ls
+
++---------------+---------+----------------------+-----------------------------------------------+------------+-----------+
+|     NAME      |  STATE  |         IPV4         |                     IPV6                      |    TYPE    | SNAPSHOTS |
++---------------+---------+----------------------+-----------------------------------------------+------------+-----------+
+| AlunyasNipple | RUNNING | 10.207.38.141 (eth0) | fd42:a88f:ec53:8d3e:216:3eff:fe65:9812 (eth0) | PERSISTENT | 0         |
++---------------+---------+----------------------+-----------------------------------------------+------------+-----------+
+
+
+# get a root shell
+lxc exec AlunyasNipple -- /run/current-system/sw/bin/bash
+
+# Now we are inside the container
+
+# update the packages list
+nix-channel --update
+
+# now you can edit /etc/nixos/configuration.nix
+# (see the very fine manual https://nixos.org/manual/nixos/stable/index.html#ch-configuration)
+# and apply with
+
+nixos-rebuild test
+
+
+
+# This part we proably don't need
+# modprobe br_netfilter
+# # add br_netfilter to /etc/modules
+# 
+# # /etc/sysctl.conf setup
+# net.ipv4.ip_forward=1
+# net.bridge.bridge-nf-call-ip6tables = 0
+# net.bridge.bridge-nf-call-iptables = 0
+# net.bridge.bridge-nf-call-arptables = 0
+
+# then run sysctl -p to apply
+# if you get:
+#      cannot stat /proc/sys/net/bridge/bridge-nf-call-arptables: No such file or directory
+# then you need the br_netfilter kernel module
+
+
+
+#
+# ufw (firewall) setup
+#
+
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw allow 80/tcp
+ufw route allow proto tcp from any port 2221 to 10.125.114.148 port 22 
+ufw route allow from 10.125.114.148 to any
+ufw route allow from 10.125.114.0/24 to 10.125.114.0/24
+
+# extra rules to unblock the firewall blocking dhcp on the virtual interface
+# not doing this means the container cannot get a new ip address if the ufw is enabled
+iptables -I ufw-user-input   1 -i lxdbr0 -j ACCEPT
+iptables -I ufw-user-output  1 -i lxdbr0 -j ACCEPT
+iptables -I ufw-user-forward 1 -i lxdbr0 -j ACCEPT
+
+lxc config device add lpdev-run fwd_ssl_8443 proxy listen=tcp:0.0.0.0:8443 connect=tcp:127.0.0.1:443
+lxc config device add lpdev-run fwd_ssh_2221 proxy listen=tcp:0.0.0.0:2221 connect=tcp:127.0.0.1:22
+lxc config device list lpdev-run
+# lxc config device remove mycontainer myport80
