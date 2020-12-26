@@ -3,7 +3,6 @@
 let
   app = "lainchan";
   domain = "leftypol.org";
-  domain2 = "dev.leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
   #acmeRoot = "/var/lib/acme/acme-challenge";
 in
@@ -140,33 +139,6 @@ in
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         #{ addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
-    
-    virtualHosts.${domain2} = {
-      #enableACME = true;
-      #acmeRoot = acmeRoot;
-      #forceSSL = true;
-      #useACMEHost = "leftypol.org";
-
-      locations = {
-        "~ \.php$" = {
-          root = dataDir;
-          extraConfig = ''
-            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
-
-        "/" = {
-          root = dataDir;
-          index = "index.html index.php";
-        };
-      };
-
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        # { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
   };
