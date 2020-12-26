@@ -18,7 +18,8 @@ in
     graphicsmagick
     which
     ffmpeg
-    phpExtensions.memcached
+    libiconv
+    phpPackages.memcached
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -36,10 +37,15 @@ in
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
       }
     ];
-    settings.mysqld = {
-      innodb_buffer_pool_size = 2147483648;
-      innodb_buffer_pool_instances = 4;
-    };
+    # for 20.09
+    #settings.mysqld = {
+    #  innodb_buffer_pool_size = 2147483648;
+    #  innodb_buffer_pool_instances = 4;
+    #};
+    extraOptions = ''
+      innodb_buffer_pool_size = 2147483648
+      innodb_buffer_pool_instances = 4
+    '';
   };
 
   # Need to add a row to theme_settings:
@@ -65,7 +71,7 @@ in
     phpOptions = ''
       upload_max_filesize = 50m
       post_max_size = 51m
-      extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
+      extension=${pkgs.phpPackages.memcached}/lib/php/extensions/memcached.so
     '';
 
     phpEnv."PATH" = lib.makeBinPath ( with pkgs; [
@@ -90,22 +96,14 @@ in
     certs."leftypol.org" = {
       #webroot = acmeRoot;
       user = "nginx";
-      group = "nginx";
       allowKeysForGroup = true;
+      group = "nginx";
+      #extraDomainNames = [ "dev.leftypol.org" ];
       extraDomains = {
         # "something.leftypol.org" = null;
         "dev.leftypol.org" = null;
       };
     };
-    # certs."dev.leftypol.org" = {
-    #   group = "nginx";
-    #   user = "nginx";
-    #   #extraDomainNames = [ "leftypol.org" ];
-    #   extraDomains = {
-    #     # "something.leftypol.org" = null;
-    #     "leftypol.org" = null;
-    #   };
-    # };
   };
 
   services.nginx = {
