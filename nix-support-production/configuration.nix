@@ -22,6 +22,6 @@
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
-  networking.hostName = "LPDev";
+  networking.hostName = "LPProd";
   networking.nameservers = [ "213.186.33.99" ];
 }

@@ -19,7 +19,7 @@ in
     graphicsmagick
     which
     ffmpeg
-    phpPackages.memcached
+    phpExtensions.memcached
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -37,10 +37,10 @@ in
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
       }
     ];
-    extraOptions = ''
-      innodb_buffer_pool_size = 2147483648
-      innodb_buffer_pool_instances = 4
-    '';
+    settings.mysqld = {
+      innodb_buffer_pool_size = 2147483648;
+      innodb_buffer_pool_instances = 4;
+    };
   };
 
   # Need to add a row to theme_settings:
@@ -66,7 +66,7 @@ in
     phpOptions = ''
       upload_max_filesize = 50m
       post_max_size = 51m
-      extension=${pkgs.phpPackages.memcached}/lib/php/extensions/memcached.so
+      extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
     '';
 
     phpEnv."PATH" = lib.makeBinPath ( with pkgs; [
