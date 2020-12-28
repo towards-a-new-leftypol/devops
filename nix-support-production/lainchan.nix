@@ -113,6 +113,7 @@ in
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
+      serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
       enableACME = true;
       forceSSL = true;
       #acmeRoot = acmeRoot;
