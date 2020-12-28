@@ -4,7 +4,6 @@ let
   app = "lainchan";
   domain = "leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
-  #acmeRoot = "/var/lib/acme/acme-challenge";
   oldpkgs = import ./nixpkgs {};
 in
 
@@ -19,6 +18,7 @@ in
     graphicsmagick
     which
     ffmpeg
+    libiconv
     phpExtensions.memcached
   ];
 
