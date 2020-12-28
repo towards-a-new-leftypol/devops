@@ -11,6 +11,7 @@
     wget
     gitAndTools.gitFull
     inetutils
+    python3
   ];
 
   boot.isContainer = true;

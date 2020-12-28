@@ -5,6 +5,7 @@ let
   domain = "leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
   #acmeRoot = "/var/lib/acme/acme-challenge";
+  oldpkgs = import ./nixpkgs {};
 in
 
 {
@@ -46,6 +47,7 @@ in
   # INSERT INTO theme_settings (theme) VALUES ("catalog");
   # INSERT INTO theme_settings (theme, name, value) VALUES ("catalog", "boards", "b b_anime b_dead b_edu b_games b_get b_gulag b_hobby b_ref b_tech");
 
+  services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
   services.phpfpm.pools.${app} = {
     user = app;
 
@@ -91,12 +93,7 @@ in
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
-      #enableACME = true;
-      #forceSSL = true;
-      #acmeRoot = acmeRoot;
-      #useACMEHost = "leftypol.org";
-      #addSSL = true;
-
+      serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
       locations = {
         "~ \.php$" = {
           root = dataDir;
@@ -111,6 +108,14 @@ in
           index = "index.html index.php";
         };
       };
+
+      # Since we are proxied by cloudflare, read the real ip from the header
+      extraConfig = ''
+        set_real_ip_from 127.0.0.1;
+        set_real_ip_from ::1;
+
+        real_ip_header CF-Connecting-IP;
+      '';
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
