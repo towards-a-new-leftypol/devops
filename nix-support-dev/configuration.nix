@@ -12,6 +12,7 @@
     gitAndTools.gitFull
     inetutils
     python3
+    ripgrep
   ];
 
   boot.isContainer = true;
