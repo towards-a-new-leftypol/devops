@@ -132,6 +132,8 @@ in
         set_real_ip_from ::1;
 
         real_ip_header CF-Connecting-IP;
+
+        add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
       '';
 
       listen = [
