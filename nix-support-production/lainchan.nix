@@ -5,6 +5,21 @@ let
   domain = "leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
   oldpkgs = import ./nixpkgs {};
+
+  leftypol_common_location_block = {
+    "~ \.php$" = {
+      root = dataDir;
+      extraConfig = ''
+            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+      '';
+    };
+
+    "/" = {
+      root = dataDir;
+      index = "index.html index.php";
+    };
+  };
 in
 
 {
@@ -109,20 +124,7 @@ in
       enableACME = true;
       forceSSL = true;
 
-      locations = {
-        "~ \.php$" = {
-          root = dataDir;
-          extraConfig = ''
-            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
-
-        "/" = {
-          root = dataDir;
-          index = "index.html index.php";
-        };
-      };
+      locations = leftypol_common_location_block;
 
       # Since we are proxied by cloudflare, read the real ip from the header
       extraConfig = ''
@@ -135,6 +137,14 @@ in
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
+      ];
+    };
+
+    virtualHosts."*.onion" = {
+      locations = leftypol_common_location_block;
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8081; ssl = false; }
       ];
     };
   };
