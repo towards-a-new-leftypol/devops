@@ -120,6 +120,14 @@ in
       #addSSL = true;
 
       locations = {
+        # Long cache all media items which are unlikely to change.
+        "~* \.(?:jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub|woff|woff2)$" = {
+          root = dataDir;
+          extraConfig = ''
+            expires 1d;
+          '';
+        };
+
         "~ \.php$" = {
           root = dataDir;
           extraConfig = ''
