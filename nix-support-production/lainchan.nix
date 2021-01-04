@@ -160,7 +160,7 @@ in
       locations = leftypol_common_location_block;
 
       listen = [
-        { addr = "0.0.0.0"; port = 8081; ssl = false; }
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
     };
   };
