@@ -5,6 +5,35 @@ let
   domain = "leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
   oldpkgs = import ./nixpkgs {};
+
+  leftypol_common_location_block = {
+    "~ \.php$" = {
+      root = dataDir;
+      extraConfig = ''
+            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+      '';
+    };
+
+    "~* \.(?:html|json)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1s;
+      '';
+    };
+
+    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1h;
+      '';
+    };
+
+    "/" = {
+      root = dataDir;
+      index = "index.html index.php";
+    };
+  };
 in
 
 {
@@ -94,20 +123,7 @@ in
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
       serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
-      locations = {
-        "~ \.php$" = {
-          root = dataDir;
-          extraConfig = ''
-            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
-
-        "/" = {
-          root = dataDir;
-          index = "index.html index.php";
-        };
-      };
+      locations = leftypol_common_location_block;
 
       # Since we are proxied by cloudflare, read the real ip from the header
       extraConfig = ''

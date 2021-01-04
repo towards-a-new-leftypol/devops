@@ -15,6 +15,20 @@ let
       '';
     };
 
+    "~* \.(?:html|json)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1s;
+      '';
+    };
+
+    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1h;
+      '';
+    };
+
     "/" = {
       root = dataDir;
       index = "index.html index.php";
