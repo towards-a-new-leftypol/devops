@@ -4,6 +4,7 @@
   imports = [
     ./users.nix
     ./lainchan.nix
+    ./tor.nix
   ];
 
   environment.systemPackages = with pkgs; [

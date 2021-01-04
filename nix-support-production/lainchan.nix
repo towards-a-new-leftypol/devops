@@ -4,7 +4,36 @@ let
   app = "lainchan";
   domain = "leftypol.org";
   dataDir = "/srv/http/${app}.leftypol.org";
-  #acmeRoot = "/var/lib/acme/acme-challenge";
+  oldpkgs = import ./nixpkgs {};
+
+  leftypol_common_location_block = {
+    "~ \.php$" = {
+      root = dataDir;
+      extraConfig = ''
+            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+      '';
+    };
+
+    "~* \.(?:html|json)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1s;
+      '';
+    };
+
+    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1h;
+      '';
+    };
+
+    "/" = {
+      root = dataDir;
+      index = "index.html index.php";
+    };
+  };
 in
 
 {
@@ -19,7 +48,7 @@ in
     which
     ffmpeg
     libiconv
-    phpPackages.memcached
+    phpExtensions.memcached
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -37,21 +66,17 @@ in
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
       }
     ];
-    # for 20.09
-    #settings.mysqld = {
-    #  innodb_buffer_pool_size = 2147483648;
-    #  innodb_buffer_pool_instances = 4;
-    #};
-    extraOptions = ''
-      innodb_buffer_pool_size = 2147483648
-      innodb_buffer_pool_instances = 4
-    '';
+    settings.mysqld = {
+      innodb_buffer_pool_size = 2147483648;
+      innodb_buffer_pool_instances = 4;
+    };
   };
 
   # Need to add a row to theme_settings:
   # INSERT INTO theme_settings (theme) VALUES ("catalog");
   # INSERT INTO theme_settings (theme, name, value) VALUES ("catalog", "boards", "b b_anime b_dead b_edu b_games b_get b_gulag b_hobby b_ref b_tech");
 
+  services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
   services.phpfpm.pools.${app} = {
     user = app;
 
@@ -71,7 +96,7 @@ in
     phpOptions = ''
       upload_max_filesize = 50m
       post_max_size = 51m
-      extension=${pkgs.phpPackages.memcached}/lib/php/extensions/memcached.so
+      extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
     '';
 
     phpEnv."PATH" = lib.makeBinPath ( with pkgs; [
@@ -94,15 +119,11 @@ in
     email = "paul_cockshott@protonmail.com";
     acceptTerms = true;
     certs."leftypol.org" = {
-      #webroot = acmeRoot;
-      user = "nginx";
-      allowKeysForGroup = true;
       group = "nginx";
-      #extraDomainNames = [ "dev.leftypol.org" ];
-      extraDomains = {
-        # "something.leftypol.org" = null;
-        "dev.leftypol.org" = null;
-      };
+      extraDomainNames = [ "dev.leftypol.org" ];
+      # extraDomains = {
+      #   "dev.leftypol.org" = null;
+      # };
     };
   };
 
@@ -113,30 +134,33 @@ in
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
+      serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
       enableACME = true;
       forceSSL = true;
-      #acmeRoot = acmeRoot;
-      #useACMEHost = "leftypol.org";
-      #addSSL = true;
 
-      locations = {
-        "~ \.php$" = {
-          root = dataDir;
-          extraConfig = ''
-            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
+      locations = leftypol_common_location_block;
 
-        "/" = {
-          root = dataDir;
-          index = "index.html index.php";
-        };
-      };
+      # Since we are proxied by cloudflare, read the real ip from the header
+      extraConfig = ''
+        set_real_ip_from 127.0.0.1;
+        set_real_ip_from ::1;
+
+        real_ip_header CF-Connecting-IP;
+
+        add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
+      '';
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
+      ];
+    };
+
+    virtualHosts."*.onion" = {
+      locations = leftypol_common_location_block;
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
     };
   };
