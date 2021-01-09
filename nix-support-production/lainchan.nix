@@ -49,6 +49,7 @@ in
     ffmpeg
     libiconv
     phpExtensions.memcached
+    ghostscript
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -107,6 +108,7 @@ in
       php
       which
       ffmpeg
+      ghostscript
     ]);
   };
 
