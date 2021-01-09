@@ -37,6 +37,10 @@ let
 in
 
 {
+  imports = [
+    ./cytube-nix/cytube.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     coreutils
     neovim
@@ -57,13 +61,16 @@ in
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = [ "lainchan" ];
+    ensureDatabases = [ "lainchan" "cytube" ];
     ensureUsers = [
       { name = "lainchan";
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
       }
       { name = "admin";
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
+      }
+      { name = "cytube";
+        ensurePermissions = { "cytube.*" = "ALL PRIVILEGES"; };
       }
     ];
     settings.mysqld = {
@@ -137,6 +144,33 @@ in
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         #{ addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
+    };
+
+    virtualHosts."tv.leftypol.org" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:8083";
+          proxyWebsockets = true;
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8081; ssl = false; }
+      ];
+    };
+  };
+
+  services.cytube = {
+    enable = false;
+    httpPort = 8083;
+    publicPort = 8891;
+
+    # Make sure you create the secrets directory with these files
+    youtube-v3-key = builtins.readFile ./secrets/cytube/youtube-v3-key;
+    cookie-secret = builtins.readFile ./secrets/cytube/cookie-secret;
+    cookie-domain = "tv.leftypol.org";
+    database = {
+      password = builtins.readFile ./secrets/cytube/database-password;
     };
   };
 
