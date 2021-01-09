@@ -23,7 +23,13 @@
   services.openssh.passwordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    22   # ssh
+    80   # http
+    443  # https
+    8081 # cytube http
+  ];
+
   networking.hostName = "LPDev";
   networking.nameservers = [ "213.186.33.99" ];
 }
