@@ -34,9 +34,15 @@ let
       index = "index.html index.php";
     };
   };
+
+  dbPassword = builtins.readFile ./secrets/cytube/database-password;
 in
 
 {
+  imports = [
+    ./cytube-nix/cytube.nix
+  ];
+
   environment.systemPackages = with pkgs; [
     coreutils
     neovim
@@ -51,13 +57,12 @@ in
     phpExtensions.memcached
   ];
 
-  networking.firewall.allowedTCPPorts = [ 8080 ];
-  #networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [ 8080 443 ];
 
   services.mysql = {
     enable = true;
     package = pkgs.mariadb;
-    ensureDatabases = [ "lainchan" ];
+    ensureDatabases = [ "lainchan" "cytube" ];
     ensureUsers = [
       { name = "lainchan";
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
@@ -65,7 +70,13 @@ in
       { name = "admin";
         ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
       }
+      { name = "cytube";
+        ensurePermissions = { "cytube.*" = "ALL PRIVILEGES"; };
+      }
     ];
+    initialScript = ''
+      ALTER USER cytube@localhost IDENTIFIED BY "${dbPassword}";
+    '';
     settings.mysqld = {
       innodb_buffer_pool_size = 2147483648;
       innodb_buffer_pool_instances = 4;
@@ -120,10 +131,11 @@ in
     acceptTerms = true;
     certs."leftypol.org" = {
       group = "nginx";
-      extraDomainNames = [ "dev.leftypol.org" ];
-      # extraDomains = {
-      #   "dev.leftypol.org" = null;
-      # };
+      extraDomainNames = [
+        "dev.leftypol.org"
+        "www.leftypol.org"
+        "tv.leftypol.org"
+      ];
     };
   };
 
@@ -162,6 +174,37 @@ in
       listen = [
         { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
+    };
+
+    virtualHosts."tv.leftypol.org" = {
+      forceSSL = true;
+      useACMEHost = "leftypol.org";
+
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:8083";
+          proxyWebsockets = true;
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
+      ];
+    };
+  };
+
+  services.cytube = {
+    enable = false;
+    httpPort = 8083;
+    publicPort = 80;
+
+    # Make sure you create the secrets directory with these files
+    youtube-v3-key = builtins.readFile ./secrets/cytube/youtube-v3-key;
+    cookie-secret = builtins.readFile ./secrets/cytube/cookie-secret;
+    cookie-domain = "tv.leftypol.org";
+    database = {
+      password = dbPassword;
     };
   };
 

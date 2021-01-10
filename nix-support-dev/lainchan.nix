@@ -58,7 +58,6 @@ in
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
-  #networking.firewall.enable = true;
 
   services.mysql = {
     enable = true;
