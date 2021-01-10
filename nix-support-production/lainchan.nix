@@ -35,7 +35,6 @@ let
     };
   };
 
-  dbPassword = builtins.readFile ./secrets/cytube/database-password;
 in
 
 {
@@ -74,9 +73,6 @@ in
         ensurePermissions = { "cytube.*" = "ALL PRIVILEGES"; };
       }
     ];
-    initialScript = ''
-      ALTER USER cytube@localhost IDENTIFIED BY "${dbPassword}";
-    '';
     settings.mysqld = {
       innodb_buffer_pool_size = 2147483648;
       innodb_buffer_pool_instances = 4;
@@ -195,16 +191,17 @@ in
   };
 
   services.cytube = {
-    enable = false;
+    enable = true;
     httpPort = 8083;
-    publicPort = 80;
+    publicPort = 443;
 
     # Make sure you create the secrets directory with these files
-    youtube-v3-key = builtins.readFile ./secrets/cytube/youtube-v3-key;
-    cookie-secret = builtins.readFile ./secrets/cytube/cookie-secret;
+    youtube-v3-key = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/youtube-v3-key);
+    cookie-secret = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/cookie-secret);
     cookie-domain = "tv.leftypol.org";
+    concurrentUsers = 500;
     database = {
-      password = dbPassword;
+      password = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/database-password);
     };
   };
 
