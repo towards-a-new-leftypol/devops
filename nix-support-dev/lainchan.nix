@@ -34,6 +34,8 @@ let
       index = "index.html index.php";
     };
   };
+
+  dbPassword = builtins.readFile ./secrets/cytube/database-password;
 in
 
 {
@@ -73,6 +75,9 @@ in
         ensurePermissions = { "cytube.*" = "ALL PRIVILEGES"; };
       }
     ];
+    initialScript = ''
+      ALTER USER cytube@localhost IDENTIFIED BY "${dbPassword}";
+    '';
     settings.mysqld = {
       innodb_buffer_pool_size = 2147483648;
       innodb_buffer_pool_instances = 4;
@@ -170,7 +175,7 @@ in
     cookie-secret = builtins.readFile ./secrets/cytube/cookie-secret;
     cookie-domain = "tv.leftypol.org";
     database = {
-      password = builtins.readFile ./secrets/cytube/database-password;
+      password = dbPassword;
     };
   };
 
