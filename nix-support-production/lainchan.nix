@@ -188,6 +188,18 @@ in
         { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
+
+    virtualHosts."netdata.leftypol.org" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:8084";
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
   };
 
   services.cytube = {

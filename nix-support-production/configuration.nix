@@ -5,6 +5,7 @@
     ./users.nix
     ./lainchan.nix
     ./tor.nix
+    ./netdata.nix
   ];
 
   environment.systemPackages = with pkgs; [
