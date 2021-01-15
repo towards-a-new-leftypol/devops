@@ -35,6 +35,9 @@ _/_/_/_/  _/        _/_/_/      _/_/_/      _/
 
         #Krates
         "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDDpJ3AI6lQHFryPqFX3GW4f762K5WvTz6HKPf1FUzsSKVLsHg/S78ufduHz2tl77HuGQc4jKVkD3C3KF4+gQpuTGKlT7C5xdGEMHWO8K1we8H1iD3C+GDCCfJi8tJnezHVWAO+nIpkd7HvDbMHLR/qKPWiUsN/UDYr1r5ksQaa0KICi84VwMPpVtDGnMa7l5g53HppgXc5nMJ/tAQtbadMamGJfia0k4dyvTYXhQxiF70Ditac4cSlEe1MLNWBumqAfz1nv8XUYsyQznWOj9YFCJo6YO+0sJ4L7KNMmYnSs8Y8Pc8W221swg75B1kVs6ISbmSy/dfVJ9qkLSK0SPUFbpBu7/TCwF9+pFcTUakhuPfX4TEI6sqrSzFZZKxLMWT2gv0FvvtE17EJyFoUo6BZ3ywSSZJIvBgYSyyJcyOr89uukaWlxGrw3rQzQJbALezR2V1n6IlnGktB79iZVfHAGk2kENRVQ/ReFzUzPSZF1QutpjWszZzO1QsQUjCPmQ0= vibescu@Rosa"
+
+        #Comatoast
+        "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGe1zu+0MjF3vGEb1oqkaB/AOY2hLpT5pIxKcfTdNIZDUogrBYEQ3lBSE7qSE5XC/x2Hn5FSsFEYnLt5aQzz6vk= user@Destroyerofworlds";
     ];
   };
 
