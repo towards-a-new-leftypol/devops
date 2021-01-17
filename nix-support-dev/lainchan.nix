@@ -17,7 +17,6 @@ in
     which
     ffmpeg
     libiconv
-    phpExtensions.memcached
     ghostscript
   ];
 
@@ -67,7 +66,6 @@ in
     phpOptions = ''
       upload_max_filesize = 50m
       post_max_size = 51m
-      extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
     '';
 
     phpEnv."PATH" = lib.makeBinPath ( with pkgs; [
@@ -83,7 +81,7 @@ in
   };
 
   services.memcached = {
-    enable = true;
+    enable = false;
     maxMemory = 1024;
   };
 
