@@ -3,7 +3,9 @@
 {
   imports = [
     ./users.nix
+    ./nginx.nix
     ./lainchan.nix
+    ./cytube-nix/cytube.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -25,7 +27,7 @@
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
-    80   # http
+    8080   # http
     443  # https
     8081 # cytube http
   ];
