@@ -37,19 +37,6 @@ let
 in
 
 {
-  security.acme = {
-    email = "paul_cockshott@protonmail.com";
-    acceptTerms = true;
-    certs."leftypol.org" = {
-      group = "nginx";
-      extraDomainNames = [
-        "dev.leftypol.org"
-        "www.leftypol.org"
-        "tv.leftypol.org"
-      ];
-    };
-  };
-
   services.nginx = {
     enable = true;
 
@@ -58,8 +45,6 @@ in
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
       serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
-      enableACME = true;
-      forceSSL = true;
 
       locations = leftypol_common_location_block;
 
@@ -89,7 +74,6 @@ in
 
     virtualHosts."tv.leftypol.org" = {
       forceSSL = true;
-      useACMEHost = "leftypol.org";
 
       locations = {
         "/" = {
