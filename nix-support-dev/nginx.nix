@@ -60,7 +60,6 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
@@ -73,8 +72,6 @@ in
     };
 
     virtualHosts."tv.leftypol.org" = {
-      forceSSL = true;
-
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8083";
@@ -84,7 +81,6 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
