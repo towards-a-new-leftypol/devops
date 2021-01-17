@@ -46,6 +46,8 @@ in
         "dev.leftypol.org"
         "www.leftypol.org"
         "tv.leftypol.org"
+        "leftychan.org"
+        "bunkerchan.red"
       ];
     };
   };
@@ -57,7 +59,7 @@ in
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
+      serverAliases = [ "www.leftypol.org" ];
       enableACME = true;
       forceSSL = true;
 
@@ -72,6 +74,27 @@ in
 
         add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
       '';
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
+      ];
+    };
+
+    virtualHosts."leftychan.org" = {
+      serverAliases = [
+        "dev.leftypol.org"
+        "bunkerchan.red"
+      ];
+
+      useACMEHost = "leftypol.org";
+      addSSL = true;
+
+      locations = {
+        "/" = {
+          return = "$scheme://leftypol.org$request_uri";
+        };
+      };
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
