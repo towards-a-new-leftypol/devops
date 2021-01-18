@@ -50,6 +50,7 @@ in
     libiconv
     phpExtensions.memcached
     ghostscript
+    exiftool
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -109,6 +110,7 @@ in
       which
       ffmpeg
       ghostscript
+      exiftool
     ]);
   };
 

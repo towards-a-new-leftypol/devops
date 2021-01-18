@@ -49,6 +49,7 @@ in
     ffmpeg
     libiconv
     phpExtensions.memcached
+    exiftool
   ];
 
   networking.firewall.allowedTCPPorts = [ 8080 ];
@@ -107,6 +108,7 @@ in
       php
       which
       ffmpeg
+      exiftool
     ]);
   };
 
