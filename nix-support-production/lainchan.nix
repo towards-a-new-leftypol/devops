@@ -65,8 +65,8 @@ in
     };
 
     phpOptions = ''
-      upload_max_filesize = 50m
-      post_max_size = 51m
+      upload_max_filesize = 90m
+      post_max_size = 90m
       extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
     '';
 

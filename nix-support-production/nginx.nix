@@ -55,7 +55,7 @@ in
   services.nginx = {
     enable = true;
 
-    clientMaxBodySize = "50m";
+    clientMaxBodySize = "80m";
 
     recommendedTlsSettings = true;
     virtualHosts.${domain} = {
