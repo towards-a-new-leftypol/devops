@@ -6,7 +6,21 @@ let
   dataDir = "/srv/http/${app}.leftypol.org";
 
   leftypol_common_location_block = {
-    "~ \.php$" = {
+    "^~ /vi/" = {
+      proxyPass = "https://img.youtube.com:443";
+      extraConfig = ''
+        proxy_cache nginx_cache;
+      '';
+    };
+
+    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1h;
+      '';
+    };
+
+    "~* \.php$" = {
       root = dataDir;
       extraConfig = ''
             # fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -18,13 +32,6 @@ let
       root = dataDir;
       extraConfig = ''
         expires 1s;
-      '';
-    };
-
-    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
-      root = dataDir;
-      extraConfig = ''
-        expires 1h;
       '';
     };
 
@@ -57,7 +64,12 @@ in
 
     clientMaxBodySize = "80m";
 
+    appendHttpConfig = ''
+      proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=nginx_cache:10M max_size=1G inactive=2d;
+    '';
+
     recommendedTlsSettings = true;
+
     virtualHosts.${domain} = {
       serverAliases = [ "www.leftypol.org" ];
       enableACME = true;
