@@ -2,6 +2,7 @@
 
 {
   imports = [
+    <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
     ./users.nix
     ./nginx.nix
     ./lainchan.nix
@@ -27,7 +28,7 @@
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
-    8080   # http
+    8080 # http
     443  # https
     8081 # cytube http
   ];
