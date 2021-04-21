@@ -71,7 +71,6 @@ in
     recommendedTlsSettings = true;
 
     virtualHosts.${domain} = {
-      serverAliases = [ "www.leftypol.org" ];
       enableACME = true;
       forceSSL = true;
 
@@ -93,10 +92,11 @@ in
       ];
     };
 
-    virtualHosts."leftychan.org" = {
+    virtualHosts."www.leftypol.org" = {
       serverAliases = [
         "dev.leftypol.org"
         "bunkerchan.red"
+        "leftychan.org"
       ];
 
       useACMEHost = "leftypol.org";
