@@ -38,6 +38,9 @@ _/_/_/_/  _/        _/_/_/      _/_/_/      _/
 
         #Comatoast
         "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGe1zu+0MjF3vGEb1oqkaB/AOY2hLpT5pIxKcfTdNIZDUogrBYEQ3lBSE7qSE5XC/x2Hn5FSsFEYnLt5aQzz6vk= user@Destroyerofworlds"
+
+        #Discomrade
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDfwvJQB0BPgl/redyDgRcJg/tpOm6iF6ADifUwgg2hV discomrade@protonmail.com"
     ];
   };
 
