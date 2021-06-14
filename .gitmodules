@@ -4,3 +4,6 @@
 [submodule "nix-support-dev/cytube-nix"]
 	path = nix-support-dev/cytube-nix
 	url = https://github.com/towards-a-new-leftypol/cytube-nix.git
+[submodule "nix-support-production/cytube-nix"]
+	path = nix-support-production/cytube-nix
+	url = https://github.com/towards-a-new-leftypol/cytube-nix.git
