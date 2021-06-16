@@ -5,7 +5,9 @@
     <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
     ./users.nix
     ./nginx.nix
+    ./mysql.nix
     ./lainchan.nix
+    ./mediawiki.nix
     ./cytube-nix/cytube.nix
   ];
 
@@ -31,6 +33,7 @@
     8080 # http
     443  # https
     8081 # cytube http
+    80   # apache (mediawiki)
   ];
 
   networking.hostName = "LPDev";

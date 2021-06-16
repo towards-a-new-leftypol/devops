@@ -20,33 +20,11 @@ in
     ghostscript
   ];
 
-  services.mysql = {
-    enable = true;
-    package = pkgs.mariadb;
-    ensureDatabases = [ "lainchan" "cytube" ];
-    ensureUsers = [
-      { name = "lainchan";
-        ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
-      }
-      { name = "admin";
-        ensurePermissions = { "lainchan.*" = "ALL PRIVILEGES"; };
-      }
-      { name = "cytube";
-        ensurePermissions = { "cytube.*" = "ALL PRIVILEGES"; };
-      }
-    ];
-
-    settings.mysqld = {
-      innodb_buffer_pool_size = 2147483648;
-      innodb_buffer_pool_instances = 4;
-    };
-  };
-
   # Need to add a row to theme_settings:
   # INSERT INTO theme_settings (theme) VALUES ("catalog");
   # INSERT INTO theme_settings (theme, name, value) VALUES ("catalog", "boards", "b b_anime b_dead b_edu b_games b_get b_gulag b_hobby b_ref b_tech");
 
-  services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
+  #services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
   services.phpfpm.pools.${app} = {
     user = app;
 
