@@ -78,6 +78,10 @@ in
     virtualHosts."*.onion" = {
       locations = leftypol_common_location_block;
 
+      extraConfig = ''
+        port_in_redirect off;
+      '';
+
       listen = [
         { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
