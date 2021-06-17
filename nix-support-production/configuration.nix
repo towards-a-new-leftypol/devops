@@ -5,6 +5,7 @@
     <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
     ./users.nix
     ./nginx.nix
+    ./mysql.nix
     ./lainchan.nix
     ./cytube-nix/cytube.nix
     ./tor.nix
@@ -26,7 +27,12 @@
   services.openssh.passwordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  networking.firewall.allowedTCPPorts = [ 22 8080 443 ];
+  networking.firewall.allowedTCPPorts = [
+    22   # ssh
+    8080 # http
+    443  # https
+  ];
+
   networking.hostName = "LPProd";
   networking.nameservers = [ "213.186.33.99" ];
 
