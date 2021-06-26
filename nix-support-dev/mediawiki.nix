@@ -2,7 +2,7 @@
 
 {
   services.mediawiki = {
-    enable = true;
+    enable = false;
 
     virtualHost = {
       hostName = "wiki.leftypol.org:2052";

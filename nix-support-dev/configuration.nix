@@ -33,7 +33,7 @@
     8080 # http
     443  # https
     8081 # cytube http
-    80   # apache (mediawiki)
+    #80   # apache (mediawiki)
   ];
 
   networking.hostName = "LPDev";
