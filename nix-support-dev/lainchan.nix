@@ -18,6 +18,7 @@ in
     ffmpeg
     libiconv
     ghostscript
+    exiftool
   ];
 
   # Need to add a row to theme_settings:
