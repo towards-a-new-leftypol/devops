@@ -107,6 +107,7 @@ in
       php
       which
       ffmpeg
+      exiftool
     ]);
   };
 
