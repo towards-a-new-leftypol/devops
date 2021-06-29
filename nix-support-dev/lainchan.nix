@@ -11,9 +11,6 @@ in
     neovim
     screen
     lsof
-    gifsicle
-    imagemagick
-    graphicsmagick
     which
     ffmpeg
     libiconv
@@ -56,6 +53,7 @@ in
       which
       ffmpeg
       ghostscript
+      exiftool
     ]);
   };
 
