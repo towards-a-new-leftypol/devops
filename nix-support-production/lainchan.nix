@@ -109,6 +109,7 @@ in
       which
       ffmpeg
       ghostscript
+      exiftool
     ]);
   };
 
