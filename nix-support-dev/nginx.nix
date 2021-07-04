@@ -47,6 +47,8 @@ in
   services.nginx = {
     enable = true;
 
+    recommendedGzipSettings = true;
+
     clientMaxBodySize = "50m";
 
     appendHttpConfig = ''
