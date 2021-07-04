@@ -22,7 +22,7 @@ in
   # INSERT INTO theme_settings (theme) VALUES ("catalog");
   # INSERT INTO theme_settings (theme, name, value) VALUES ("catalog", "boards", "b b_anime b_dead b_edu b_games b_get b_gulag b_hobby b_ref b_tech");
 
-  #services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
+  services.phpfpm.phpPackage = oldpkgs.pkgs.php72;
   services.phpfpm.pools.${app} = {
     user = app;
 
