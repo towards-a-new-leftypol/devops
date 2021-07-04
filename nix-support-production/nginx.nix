@@ -156,6 +156,30 @@ in
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
       ];
     };
+
+    virtualHosts."dev2.leftypol.org" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://10.125.114.138:8080";
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
+    virtualHosts."dev3.leftypol.org" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://10.125.114.210:8080";
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
   };
 
   users.users.${app} = {
