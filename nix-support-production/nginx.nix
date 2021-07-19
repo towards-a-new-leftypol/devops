@@ -99,6 +99,7 @@ in
         "dev.leftypol.org"
         "bunkerchan.red"
         "leftychan.org"
+        "bunkerchan.net"
       ];
 
       useACMEHost = "leftypol.org";
