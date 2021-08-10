@@ -2,7 +2,8 @@
 
 let
   app = "lainchan";
-  domain = "leftypol.org";
+  #domain = "leftypol.org";
+  domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
 
   leftypol_common_location_block = {
@@ -47,14 +48,15 @@ in
   security.acme = {
     email = "paul_cockshott@protonmail.com";
     acceptTerms = true;
-    certs."leftypol.org" = {
+    certs."${domain}" = {
       group = "nginx";
       extraDomainNames = [
         "dev.leftypol.org"
         "www.leftypol.org"
         "tv.leftypol.org"
-        "leftychan.org"
         "bunkerchan.red"
+        "leftychan.org"
+        "leftypol.org"
       ];
     };
   };
@@ -74,7 +76,8 @@ in
 
     virtualHosts.${domain} = {
       enableACME = true;
-      forceSSL = true;
+      #forceSSL = true;
+      addSSL = true;
 
       locations = leftypol_common_location_block;
 
@@ -94,20 +97,45 @@ in
       ];
     };
 
+    # virtualHosts."leftypol.org" = {
+    #   #enableACME = true;
+    #   #forceSSL = true;
+    #   addSSL = true;
+    #   useACMEHost = domain;
+
+    #   locations = leftypol_common_location_block;
+
+    #   # Since we are proxied by cloudflare, read the real ip from the header
+    #   extraConfig = ''
+    #     set_real_ip_from 127.0.0.1;
+    #     set_real_ip_from ::1;
+
+    #     real_ip_header CF-Connecting-IP;
+
+    #     add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
+    #   '';
+
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
+
     virtualHosts."www.leftypol.org" = {
       serverAliases = [
         "dev.leftypol.org"
         "bunkerchan.red"
-        "leftychan.org"
+        #"leftychan.org"
         "bunkerchan.net"
+        "leftypol.org"
       ];
 
-      useACMEHost = "leftypol.org";
+      useACMEHost = domain;
       addSSL = true;
 
       locations = {
         "/" = {
-          return = "$scheme://leftypol.org$request_uri";
+          return = "$scheme://${domain}$request_uri";
         };
       };
 
@@ -131,7 +159,7 @@ in
 
     virtualHosts."tv.leftypol.org" = {
       forceSSL = true;
-      useACMEHost = "leftypol.org";
+      useACMEHost = domain;
 
       locations = {
         "/" = {
