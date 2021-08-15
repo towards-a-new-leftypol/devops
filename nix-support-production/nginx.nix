@@ -51,12 +51,13 @@ in
     certs."${domain}" = {
       group = "nginx";
       extraDomainNames = [
-        "dev.leftypol.org"
-        "www.leftypol.org"
-        "tv.leftypol.org"
-        "bunkerchan.red"
-        "leftychan.org"
-        "leftypol.org"
+        #"dev.leftypol.org"
+        #"www.leftypol.org"
+        #"tv.leftypol.org"
+        #"bunkerchan.red"
+        #"leftychan.org"
+        #"leftypol.org"
+        "tv.leftychan.net"
       ];
     };
   };
@@ -76,8 +77,7 @@ in
 
     virtualHosts.${domain} = {
       enableACME = true;
-      #forceSSL = true;
-      addSSL = true;
+      forceSSL = true;
 
       locations = leftypol_common_location_block;
 
@@ -97,35 +97,11 @@ in
       ];
     };
 
-    # virtualHosts."leftypol.org" = {
-    #   #enableACME = true;
-    #   #forceSSL = true;
-    #   addSSL = true;
-    #   useACMEHost = domain;
-
-    #   locations = leftypol_common_location_block;
-
-    #   # Since we are proxied by cloudflare, read the real ip from the header
-    #   extraConfig = ''
-    #     set_real_ip_from 127.0.0.1;
-    #     set_real_ip_from ::1;
-
-    #     real_ip_header CF-Connecting-IP;
-
-    #     add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
-    #   '';
-
-    #   listen = [
-    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
-    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
-    #   ];
-    # };
-
     virtualHosts."www.leftypol.org" = {
       serverAliases = [
         "dev.leftypol.org"
         "bunkerchan.red"
-        #"leftychan.org"
+        "leftychan.org"
         "bunkerchan.net"
         "leftypol.org"
       ];
@@ -157,8 +133,9 @@ in
       ];
     };
 
-    virtualHosts."tv.leftypol.org" = {
+    virtualHosts."tv.leftychan.net" = {
       forceSSL = true;
+      #addSSL = true;
       useACMEHost = domain;
 
       locations = {
@@ -174,7 +151,7 @@ in
       ];
     };
 
-    virtualHosts."netdata.leftypol.org" = {
+    virtualHosts."netdata.leftychan.net" = {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8084";
@@ -186,7 +163,7 @@ in
       ];
     };
 
-    virtualHosts."dev2.leftypol.org" = {
+    virtualHosts."dev2.leftychan.net" = {
       locations = {
         "/" = {
           proxyPass = "http://10.125.114.138:8080";
@@ -198,7 +175,7 @@ in
       ];
     };
 
-    virtualHosts."dev3.leftypol.org" = {
+    virtualHosts."dev3.leftychan.net" = {
       locations = {
         "/" = {
           proxyPass = "http://10.125.114.210:8080";
