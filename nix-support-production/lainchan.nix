@@ -70,7 +70,7 @@ in
     # Make sure you create the secrets directory with these files
     youtube-v3-key = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/youtube-v3-key);
     cookie-secret = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/cookie-secret);
-    cookie-domain = "tv.leftypol.org";
+    cookie-domain = "tv.leftychan.net";
     concurrentUsers = 500;
     database = {
       password = lib.removeSuffix "\n" (builtins.readFile ./secrets/cytube/database-password);
