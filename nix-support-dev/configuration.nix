@@ -2,8 +2,13 @@
 
 {
   imports = [
+    <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
     ./users.nix
+    ./nginx.nix
+    ./mysql.nix
     ./lainchan.nix
+    ./mediawiki.nix
+    ./cytube-nix/cytube.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -23,7 +28,20 @@
   services.openssh.passwordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    22   # ssh
+    8080 # http
+    443  # https
+    8081 # cytube http
+    #80   # apache (mediawiki)
+  ];
+
   networking.hostName = "LPDev";
   networking.nameservers = [ "213.186.33.99" ];
+
+  # Install new init script
+  system.activationScripts.installInitScript = lib.mkForce ''
+    mkdir -p /sbin
+    ln -fs $systemConfig/init /sbin/init
+  '';
 }
