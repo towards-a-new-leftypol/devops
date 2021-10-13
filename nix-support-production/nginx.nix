@@ -58,6 +58,9 @@ in
         #"leftychan.org"
         #"leftypol.org"
         "tv.leftychan.net"
+        "dev.leftychan.net"
+        "dev2.leftychan.net"
+        "dev3.leftychan.net"
       ];
     };
   };
@@ -74,6 +77,8 @@ in
     '';
 
     recommendedTlsSettings = true;
+
+    recommendedProxySettings = true;
 
     virtualHosts.${domain} = {
       enableACME = true;
@@ -164,6 +169,9 @@ in
     };
 
     virtualHosts."dev2.leftychan.net" = {
+      useACMEHost = domain;
+      addSSL = true;
+
       locations = {
         "/" = {
           proxyPass = "http://10.125.114.138:8080";
@@ -176,6 +184,9 @@ in
     };
 
     virtualHosts."dev3.leftychan.net" = {
+      useACMEHost = domain;
+      addSSL = true;
+
       locations = {
         "/" = {
           proxyPass = "http://10.125.114.210:8080";
