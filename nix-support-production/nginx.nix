@@ -2,7 +2,6 @@
 
 let
   app = "lainchan";
-  #domain = "leftypol.org";
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
 
@@ -51,12 +50,7 @@ in
     certs."${domain}" = {
       group = "nginx";
       extraDomainNames = [
-        #"dev.leftypol.org"
-        #"www.leftypol.org"
-        #"tv.leftypol.org"
-        #"bunkerchan.red"
-        #"leftychan.org"
-        #"leftypol.org"
+        "www.leftychan.net"
         "tv.leftychan.net"
         "dev.leftychan.net"
         "dev2.leftychan.net"
@@ -78,7 +72,7 @@ in
 
     recommendedTlsSettings = true;
 
-    recommendedProxySettings = true;
+    # recommendedProxySettings = true;
 
     virtualHosts.${domain} = {
       enableACME = true;
@@ -102,14 +96,14 @@ in
       ];
     };
 
-    virtualHosts."www.leftypol.org" = {
-      serverAliases = [
-        "dev.leftypol.org"
-        "bunkerchan.red"
-        "leftychan.org"
-        "bunkerchan.net"
-        "leftypol.org"
-      ];
+    virtualHosts."www.leftychan.net" = {
+      # serverAliases = [
+      #   "dev.leftypol.org"
+      #   "bunkerchan.red"
+      #   "leftychan.org"
+      #   "bunkerchan.net"
+      #   "leftypol.org"
+      # ];
 
       useACMEHost = domain;
       addSSL = true;
@@ -149,6 +143,17 @@ in
           proxyWebsockets = true;
         };
       };
+
+      extraConfig = ''
+        proxy_redirect          off;
+        proxy_http_version      1.1;
+        proxy_set_header        Host $host;
+        proxy_set_header        X-Real-IP $remote_addr;
+        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header        X-Forwarded-Proto $scheme;
+        proxy_set_header        X-Forwarded-Host $host;
+        proxy_set_header        X-Forwarded-Server $host;
+      '';
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
