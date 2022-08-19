@@ -41,6 +41,17 @@ let
     };
   };
 
+  serverConfig."m.server" = "matrix.leftychan.net:443";
+  clientConfig = {
+    "m.homeserver".base_url = "https://matrix.leftychan.net";
+    "m.identity_server" = {};
+  };
+  mkWellKnown = data: ''
+    add_header Content-Type application/json;
+    add_header Access-Control-Allow-Origin *;
+    return 200 '${builtins.toJSON data}';
+  '';
+
 in
 
 {
@@ -78,7 +89,10 @@ in
       enableACME = true;
       forceSSL = true;
 
-      locations = leftypol_common_location_block;
+      locations = leftypol_common_location_block // {
+        "= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig; 
+        "= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig; 
+      };
 
       # Since we are proxied by cloudflare, read the real ip from the header
       extraConfig = ''
@@ -97,13 +111,15 @@ in
     };
 
     virtualHosts."www.leftychan.net" = {
-      # serverAliases = [
-      #   "dev.leftypol.org"
-      #   "bunkerchan.red"
-      #   "leftychan.org"
-      #   "bunkerchan.net"
-      #   "leftypol.org"
-      # ];
+      serverAliases = [
+        "dev.leftychan.net"
+        "dev2.leftychan.net"
+        "dev3.leftychan.net"
+        #"bunkerchan.red"
+        #"leftychan.org"
+        #"bunkerchan.net"
+        #"leftypol.org"
+      ];
 
       useACMEHost = domain;
       addSSL = true;
@@ -115,7 +131,6 @@ in
       };
 
       listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
@@ -165,6 +180,14 @@ in
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8084";
+          extraConfig = ''
+            proxy_set_header        Host $host;
+            proxy_set_header        X-Real-IP $remote_addr;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header        X-Forwarded-Proto $scheme;
+            proxy_set_header        X-Forwarded-Host $host;
+            proxy_set_header        X-Forwarded-Server $host;
+          '';
         };
       };
 
