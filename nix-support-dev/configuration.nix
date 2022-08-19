@@ -18,6 +18,7 @@
     inetutils
     python3
     ripgrep
+    php74Packages.composer
   ];
 
   boot.isContainer = true;
@@ -36,12 +37,6 @@
     #80   # apache (mediawiki)
   ];
 
-  networking.hostName = "LPDev";
+  networking.hostName = "LPDev2";
   networking.nameservers = [ "213.186.33.99" ];
-
-  # Install new init script
-  system.activationScripts.installInitScript = lib.mkForce ''
-    mkdir -p /sbin
-    ln -fs $systemConfig/init /sbin/init
-  '';
 }
