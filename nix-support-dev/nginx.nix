@@ -2,7 +2,7 @@
 
 let
   app = "lainchan";
-  domain = "leftypol.org";
+  domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
 
   leftypol_common_location_block = {
@@ -47,18 +47,16 @@ in
   services.nginx = {
     enable = true;
 
-    recommendedGzipSettings = true;
-
     clientMaxBodySize = "50m";
 
     appendHttpConfig = ''
       proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=nginx_cache:10M max_size=1G inactive=2d;
     '';
 
-    recommendedTlsSettings = true;
+    recommendedTlsSettings = false;
 
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftypol.org" ];
+      serverAliases = [ "dev.leftychan.net" ];
 
       locations = leftypol_common_location_block;
 
