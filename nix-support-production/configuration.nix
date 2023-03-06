@@ -17,6 +17,7 @@
     wget
     gitAndTools.gitFull
     inetutils
+    ripgrep
   ];
 
   boot.isContainer = true;
