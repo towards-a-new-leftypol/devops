@@ -66,6 +66,7 @@ in
         "dev.leftychan.net"
         "dev2.leftychan.net"
         "dev3.leftychan.net"
+        "drama.leftychan.net"
       ];
     };
   };
@@ -193,6 +194,16 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
+    virtualHosts."drama.leftychan.net" = {
+      useACMEHost = domain;
+      forceSSL = true;
+      root = "/srv/http/drama";
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
