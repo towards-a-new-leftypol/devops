@@ -41,7 +41,7 @@ let
     };
   };
 
-  serverConfig."m.server" = "matrix.leftychan.net:443";
+  serverConfig."m.server" = "matrix.leftychan.net";
   clientConfig = {
     "m.homeserver".base_url = "https://matrix.leftychan.net";
     "m.identity_server" = {};

@@ -23,10 +23,8 @@ _/_/_/_/  _/        _/        _/          _/_/      _/_/_/
     openssh.authorizedKeys.keys = [
         # Zer0's key, add your public key here
         "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBBu2RKq+iiu2DoaeMlwhzGGGJww0qP1miyvBJ8OoDc8145XY9kw/LFQ8FbDG8jezszfpe6T6zEbpLFgEoj/ClrA= zer0@localhos"
-        # # Antinous's key
-        # "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDayOCrmPNQMsckY/ijvVaKtI2CMp6rwZjv920EF1m/PxRb6NqvvFTniatevnXK/QQ8xpDMAEfcm0yBHvQPjZAcsOLGby9FIoWeVe8zv3pJEdlG+HK9HC81tUpne1Tm0JQZh+Mcm9ptT/kq8Z96E/ifkzYiUWCB0VPONPzhqLf+PUV4MeAM1QRnI1sShG79MA3rpz017x6cCDjAuGuLWDdlsqCXmPsPv57csdGiuoKg+/QSC0jkDDHbXWlX+RHoCVi10/0E2UVf1EzDrudnBlaQRZi/MePXfuc1FEK85UmINHcZhz2vgOVzjujwQshsScggodQyKIvu4q4A+Pp2aCBj june_2020_droplet@gmail.com"
-        # #Barbara Pitt's key
-        # "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDUOhK4HLTeTaXUQ4LqqVWnTYh7hvKoEwpzMxqZ30FEvbPn9z0lipexRImNJKYuJWAkq3BYKrUKfblr7pL4hg++FcgZIXeMTdWyvaHlSbFZu1oR7xa7MhAVgBD59ZA0xevRr9K1CV5m/jHv8j+e1PANR8QZfwhcpzFdQ/RbKOKV1ag7kt3EqyYjlD95GvPES682Xn60/7/SIZEcXdfiwq1rBZvL/5i5taE1y+OiOgbu05d9YYCuEp8jO2T14xkVJ1BehNL6AssXIDGXxHah2LM2ZL+pPAoCRbjS8DKItgmfIQjUzmSJntWQ2TlO1PTVPtKmaUdHWZv8pQSX+MLY4F8/i5M4xcMTqUkA34iXLq11qz9RSAxT7uoevM756t7lgQfiVjWPSouyUrTESYjDWmRDQoNwS/iEqfY5gVhrogejDSYMVmPo0i4Ev785Q7UHGc1KkK0jZkQNWov6GOjVQWe3bOgq9R/T0A5PnTNObJRUUGRxpEWA+S9py0vfQwLhZJU= demo@nixos"
+        # Comatoast
+        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCXfeugu0xKJtp2lheAGlzG1ibQKe9d7dBU9/pXzVPBq5y4Sgsq7BTuvrABjfbQVT9w5ealH9zSW/vorlt9c1xgRPkDiA0FB7JKYSFfjsnGv4BX1RhB/YeXPBn8ArNdHTrx8Mp2rT63wZQJSJdnhnC5J/iq9jbfjjbea/ABjjwbAEzkawCJPOsoB3bHsvsCTa0pj8xOJ7ERZObtZtrO/3AWMHWiR7MVG2SgpAp3JyLARh7YJjX66tobo9SWsxf3z8+Q2dA8LIeP65kRJuvVzc9cvo8eZfdwWqSFGIFHJl09VjzNL6STjonma29BpHWWEecEOcluu7Sbgzs97fCZYJIup4I75Q11LqhmWeLpI/A6BohgPgTggq03IqUcnIjI90uVSTdOdB9TJeys0KowIRQMGQlcE61vd4JLAPrQMhnrKuazU3ep1/X34xA+qKZmR8YN7ByY3K8CynZbzB7UAcsJg6mXTPXGMIPzsVZb0r7jmnvywfB0WAUGmyo+XrbvyX0= comatoast"
     ];
   };
 
