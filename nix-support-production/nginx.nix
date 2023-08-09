@@ -13,7 +13,7 @@ let
       '';
     };
 
-    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|bmp|zip|epub)$" = {
+    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|djvu|bmp|zip|xz|epub)$" = {
       root = dataDir;
       extraConfig = ''
         expires 1h;
