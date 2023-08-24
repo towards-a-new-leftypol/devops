@@ -18,14 +18,15 @@
     inetutils
     python3
     ripgrep
+    php
+    phpPackages.composer
   ];
 
   boot.isContainer = true;
-  environment.noXlibs = true;
   
   services.openssh.enable = true;
   services.openssh.startWhenNeeded = false;
-  services.openssh.passwordAuthentication = false;
+  services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
   networking.firewall.allowedTCPPorts = [
