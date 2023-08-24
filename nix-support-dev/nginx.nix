@@ -93,6 +93,7 @@ in
     isSystemUser = true;
     createHome = true;
     home = dataDir;
+    homeMode = "750";
     group = app;
     extraGroups = [ "nginx" ];
   };

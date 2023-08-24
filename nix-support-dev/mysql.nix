@@ -20,7 +20,7 @@
       }
     ];
 
-    bind = "0.0.0.0";
+    settings.mysqld.bind-address = "0.0.0.0";
 
     settings.mysqld = {
       innodb_buffer_pool_size = 2147483648;
