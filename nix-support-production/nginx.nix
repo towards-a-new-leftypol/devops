@@ -5,6 +5,17 @@ let
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
 
+  # Since we are proxied by cloudflare, read the real ip from the header
+  cloudflareExtraConfig = ''
+    set_real_ip_from 127.0.0.1;
+    set_real_ip_from ::1;
+
+    real_ip_header CF-Connecting-IP;
+
+    add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
+  '';
+
+
   leftypol_common_location_block = {
     "^~ /vi/" = {
       proxyPass = "https://img.youtube.com:443";
@@ -66,6 +77,7 @@ in
         "dev.leftychan.net"
         "dev2.leftychan.net"
         "dev3.leftychan.net"
+        "cytube_dev.leftychan.net"
         "drama.leftychan.net"
       ];
     };
@@ -95,15 +107,7 @@ in
         "= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig; 
       };
 
-      # Since we are proxied by cloudflare, read the real ip from the header
-      extraConfig = ''
-        set_real_ip_from 127.0.0.1;
-        set_real_ip_from ::1;
-
-        real_ip_header CF-Connecting-IP;
-
-        add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
-      '';
+      extraConfig = cloudflareExtraConfig;
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
@@ -112,6 +116,7 @@ in
     };
 
     virtualHosts."www.leftychan.net" = {
+      /*
       serverAliases = [
         "dev.leftychan.net"
         "dev2.leftychan.net"
@@ -121,6 +126,7 @@ in
         #"bunkerchan.net"
         #"leftypol.org"
       ];
+      */
 
       useACMEHost = domain;
       addSSL = true;
@@ -132,6 +138,7 @@ in
       };
 
       listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
@@ -207,33 +214,35 @@ in
       ];
     };
 
-    virtualHosts."dev2.leftychan.net" = {
+    virtualHosts."dev.leftychan.net" = {
       useACMEHost = domain;
-      addSSL = true;
+      forceSSL = true;
 
       locations = {
         "/" = {
-          proxyPass = "http://10.125.114.138:8080";
+          proxyPass = "http://10.125.114.96:8080";
         };
       };
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
-    virtualHosts."dev3.leftychan.net" = {
+    virtualHosts."cytube_dev.leftychan.net" = {
       useACMEHost = domain;
-      addSSL = true;
+      forceSSL = true;
 
       locations = {
         "/" = {
-          proxyPass = "http://10.125.114.210:8080";
+          proxyPass = "http://10.125.114.96:8080";
         };
       };
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
   };
