@@ -77,7 +77,7 @@ in
         "dev.leftychan.net"
         "dev2.leftychan.net"
         "dev3.leftychan.net"
-        "cytube_dev.leftychan.net"
+        "cytube-dev.leftychan.net"
         "drama.leftychan.net"
       ];
     };
@@ -230,7 +230,7 @@ in
       ];
     };
 
-    virtualHosts."cytube_dev.leftychan.net" = {
+    virtualHosts."cytube-dev.leftychan.net" = {
       useACMEHost = domain;
       forceSSL = true;
 
