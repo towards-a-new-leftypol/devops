@@ -9,6 +9,7 @@
     ./lainchan.nix
     #./mediawiki.nix
     ./cytube-nix/cytube.nix
+    ./postgrest.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -28,6 +29,13 @@
   services.openssh.startWhenNeeded = false;
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
+
+  services.postgrest = {
+    enable = true;
+    connectionString = "postgres://spam_noticer:test_password@192.168.4.2:5432/leftypol_test";
+    anonRole = "leftypol_anon";
+    jwtSecret = "pJuvmNFgYCctNxMijeEbkQAhfHpuZirVOtpRQIPaEhQ=";
+  };
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
