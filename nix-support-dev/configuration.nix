@@ -42,6 +42,7 @@
     8080 # http
     443  # https
     8081 # cytube http
+    3000 # postgREST (should be open on dev only)
     #80   # apache (mediawiki)
   ];
 
