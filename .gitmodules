@@ -1,6 +1,3 @@
-[submodule "nix-support-production/nixpkgs"]
-	path = nix-support-production/nixpkgs
-	url = https://github.com/NixOS/nixpkgs.git
 [submodule "nix-support-dev/cytube-nix"]
 	path = nix-support-dev/cytube-nix
 	url = https://github.com/towards-a-new-leftypol/cytube-nix.git

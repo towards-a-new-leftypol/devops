@@ -18,14 +18,15 @@
     inetutils
     python3
     ripgrep
+    php
+    phpPackages.composer
   ];
 
   boot.isContainer = true;
-  environment.noXlibs = true;
   
   services.openssh.enable = true;
   services.openssh.startWhenNeeded = false;
-  services.openssh.passwordAuthentication = false;
+  services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
   networking.firewall.allowedTCPPorts = [
@@ -38,10 +39,4 @@
 
   networking.hostName = "LPDev";
   networking.nameservers = [ "213.186.33.99" ];
-
-  # Install new init script
-  system.activationScripts.installInitScript = lib.mkForce ''
-    mkdir -p /sbin
-    ln -fs $systemConfig/init /sbin/init
-  '';
 }
