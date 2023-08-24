@@ -58,7 +58,7 @@ in
     recommendedTlsSettings = true;
 
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftypol.org" "www.leftypol.org" ];
+      serverAliases = [ "dev.leftypol.org" ];
 
       locations = leftypol_common_location_block;
 
@@ -77,35 +77,11 @@ in
       ];
     };
 
-    virtualHosts."*.onion" = {
-      locations = leftypol_common_location_block;
-
-      extraConfig = ''
-        port_in_redirect off;
-      '';
-
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
-
-    virtualHosts."tv.leftypol.org" = {
+    virtualHosts."cytube_dev.leftypol.org" = {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8083";
           proxyWebsockets = true;
-        };
-      };
-
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-      ];
-    };
-
-    virtualHosts."netdata.leftypol.org" = {
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:8084";
         };
       };
 

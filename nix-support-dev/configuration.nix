@@ -7,7 +7,7 @@
     ./nginx.nix
     ./mysql.nix
     ./lainchan.nix
-    ./mediawiki.nix
+    #./mediawiki.nix
     ./cytube-nix/cytube.nix
   ];
 
