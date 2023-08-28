@@ -1,5 +1,12 @@
 { config, pkgs, lib, ... }:
 
+let
+  spamnoticer_dbpassword = builtins.readFile ./secrets/spamnoticer/dbpassword;
+  jwt_secret = builtins.readFile ./secrets/spamnoticer/jwt_secret;
+  jwt = builtins.readFile ./secrets/spamnoticer/jwt;
+
+in
+
 {
   imports = [
     <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
@@ -35,15 +42,15 @@
 
   services.postgrest = {
     enable = true;
-    connectionString = "postgres://spam_noticer:test_password@192.168.4.2:5432/leftypol_test";
+    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@/leftypol_test";
     anonRole = "leftypol_anon";
-    jwtSecret = "pJuvmNFgYCctNxMijeEbkQAhfHpuZirVOtpRQIPaEhQ=";
+    jwtSecret = jwt_secret;
   };
 
   services.spamnoticer = {
     enable = true;
     postgrestUrl = "http://localhost:3000";
-    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic3BhbV9ub3RpY2VyIn0.j6-6HSBh-Wf5eQovT9cF1ZCNuxkQOqzBFtE3C8aTG3A";
+    jwt = jwt;
     spamContentDir = "/srv/http/spam";
     port = 3300;
     debug = true;
