@@ -9,6 +9,7 @@
     ./lainchan.nix
     #./mediawiki.nix
     ./cytube-nix/cytube.nix
+    ./postgresql.nix
     ./postgrest.nix
     ./spamnoticer.nix
   ];
