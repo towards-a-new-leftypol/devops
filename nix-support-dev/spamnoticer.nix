@@ -45,7 +45,7 @@ in
 
       port = mkOption {
         type = types.int;
-        default = 3300;
+        default = 8300;
         description = "http serve port";
       };
 
