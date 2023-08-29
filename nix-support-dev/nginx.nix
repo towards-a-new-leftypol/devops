@@ -44,13 +44,13 @@ let
   container_ip = "10.207.38.96";
 
   spamnoticer_static_cfg = {
-    "postgrest_url" = "http://${container_ip}:3000";
-    "jwt" = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic3BhbV9ub3RpY2VyIn0.j6-6HSBh-Wf5eQovT9cF1ZCNuxkQOqzBFtE3C8aTG3A";
-    "website_urls" = {
-      "leftychan.net" = "https://leftychan.net";
-      "leftychan_dev" = "http://${container_ip}:8080";
+    postgrest_url = "http://${container_ip}:3000";
+    jwt = builtins.readFile ./secrets/spamnoticer/jwt;
+    website_urls = {
+      leftychan.net = "https://leftychan.net";
+      leftychan_dev = "http://${container_ip}:8080";
     };
-    "content_directory" = "/srv/http/spam";
+    content_directory = "/srv/http/spam";
   };
 
   spamnoticer_static_cfg_filename = pkgs.writeText "settings.json" (builtins.toJSON spamnoticer_static_cfg);

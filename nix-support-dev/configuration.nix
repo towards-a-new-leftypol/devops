@@ -2,8 +2,6 @@
 
 let
   spamnoticer_dbpassword = builtins.readFile ./secrets/spamnoticer/dbpassword;
-  jwt_secret = builtins.readFile ./secrets/spamnoticer/jwt_secret;
-  jwt = builtins.readFile ./secrets/spamnoticer/jwt;
 
 in
 
@@ -44,13 +42,13 @@ in
     enable = true;
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@/leftypol_test";
     anonRole = "leftypol_anon";
-    jwtSecret = jwt_secret;
+    jwtSecret = builtins.readFile ./secrets/spamnoticer/jwt_secret;
   };
 
   services.spamnoticer = {
     enable = true;
     postgrestUrl = "http://localhost:3000";
-    jwt = jwt;
+    jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     spamContentDir = "/srv/http/spam";
     port = 3300;
     debug = true;
