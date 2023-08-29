@@ -75,7 +75,7 @@ in
         Group = cfg.group;
         #Restart = "on-failure";
         ExecStart = "${pkgs.haskellPackages.postgrest}/bin/postgrest ${configFileLocation}";
-        KillSignal = "SIGQUIT";
+        KillSignal = "SIGTERM";
       };
     };
 

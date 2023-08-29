@@ -13,10 +13,10 @@ in
 {
   services.postgresql = {
       enable = true;
-      #enableTCPIP = true;
+      enableTCPIP = true;
       package = pkgs.postgresql;
       authentication = ''
-          host    all     all     localhost       password
+          host    all     all     localhost       md5
       '';
       settings = {
         shared_buffers = "2GB";

@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  spamnoticer_dbpassword = builtins.readFile ./secrets/spamnoticer/dbpassword;
+  spamnoticer_dbpassword = lib.fileContents ./secrets/spamnoticer/dbpassword;
 
 in
 
@@ -40,15 +40,15 @@ in
 
   services.postgrest = {
     enable = true;
-    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@/leftypol_test";
+    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
     anonRole = "leftypol_anon";
-    jwtSecret = builtins.readFile ./secrets/spamnoticer/jwt_secret;
+    jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
   };
 
   services.spamnoticer = {
     enable = true;
     postgrestUrl = "http://localhost:3000";
-    jwt = builtins.readFile ./secrets/spamnoticer/jwt;
+    jwt = lib.fileContents ./secrets/spamnoticer/jwt;
     spamContentDir = "/srv/http/spam";
     port = 3300;
     debug = true;
