@@ -3,11 +3,11 @@
 let
   spgist = pkgs.callPackage ./pg_spgist_nix/default.nix {};
 
-  initScript = builtins.toFile "init-script.sql" (
-    (builtins.readFile "${spgist}/init.sql") + ''
+  # initScript = builtins.toFile "init-script.sql" (
+  #   (builtins.readFile "${spgist}/init.sql") + ''
 
-    CREATE EXTENSION pg_trgm;
-  '');
+  #   CREATE EXTENSION pg_trgm;
+  # '');
 in
 
 {
@@ -23,19 +23,19 @@ in
         work_mem = "16MB";
       };
 
-      ensureDatabases = [ "leftypol_test" ];
+      #ensureDatabases = [ "leftypol_test" ];
 
       ensureUsers = [
         {
           name = "admin";
-          ensurePermissions = {
-            "DATABASE \"leftypol_test\"" = "ALL PRIVILEGES";
-            "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+          ensureClauses = {
+            createrole = true;
+            createdb = true;
           };
         }
       ];
 
-      initialScript = initScript;
+      # initialScript = initScript;
 
       extraPlugins = [
         spgist
