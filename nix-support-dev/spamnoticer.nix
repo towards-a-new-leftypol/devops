@@ -89,7 +89,7 @@ in
         #Restart = "on-failure";
         WorkingDirectory = "/home/${cfg.user}";
         ExecStart = "${spamnoticer}/bin/spamnoticer";
-        KillSignal = "SIGQUIT";
+        KillSignal = "SIGTERM";
       };
     };
 
