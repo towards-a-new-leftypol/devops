@@ -61,6 +61,7 @@ in
     8081 # cytube http
     3000 # postgREST (should be open on dev only)
     8300 # SpamNoticer
+    5432 # postgresql
     #80   # apache (mediawiki)
   ];
 

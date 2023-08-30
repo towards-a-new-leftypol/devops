@@ -99,6 +99,7 @@ in
 
     users.extraUsers.${cfg.user} = {
       group = cfg.group;
+      extraGroups = [ "nginx" ];
       #isSystemUser = true;
       isNormalUser = true;
       createHome = true;
