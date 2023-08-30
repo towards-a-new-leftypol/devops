@@ -35,7 +35,6 @@
   ];
 
   networking.hostName = "LPProd";
-  networking.nameservers = [ "213.186.33.99" ];
 
   # Install new init script
   system.activationScripts.installInitScript = lib.mkForce ''
