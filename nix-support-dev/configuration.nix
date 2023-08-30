@@ -28,6 +28,7 @@ in
     ripgrep
     php
     phpPackages.composer
+    dig
     (import ./spamnoticer_static.nix {})
   ];
 
@@ -66,5 +67,4 @@ in
   ];
 
   networking.hostName = "LPDev";
-  networking.nameservers = [ "213.186.33.99" ];
 }
