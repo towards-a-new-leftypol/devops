@@ -41,7 +41,8 @@ let
     };
   };
 
-  container_ip = "10.207.38.96";
+  #container_ip = "10.207.38.96";
+  container_ip = "10.4.0.96";
 
   spamnoticer_static_cfg = {
     postgrest_url = "http://${container_ip}:3000";
@@ -83,7 +84,7 @@ in
     };
 
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftychan.net" "10.207.38.96" ];
+      serverAliases = [ "dev.leftychan.net" "10.207.38.96" "10.4.0.96" "localhost" "127.0.0.1" ];
 
       locations = leftypol_common_location_block;
 
