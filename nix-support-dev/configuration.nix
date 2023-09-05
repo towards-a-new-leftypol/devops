@@ -29,6 +29,7 @@ in
     php
     phpPackages.composer
     dig
+    tcpdump
     (import ./spamnoticer_static.nix {})
   ];
 

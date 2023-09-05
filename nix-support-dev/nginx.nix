@@ -45,7 +45,7 @@ let
   container_ip = "10.4.0.96";
 
   spamnoticer_static_cfg = {
-    postgrest_url = "http://${container_ip}:3000";
+    postgrest_url = "http://postgrest-local:8080";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan.net = "https://leftychan.net";
@@ -84,7 +84,7 @@ in
     };
 
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftychan.net" "10.207.38.96" "10.4.0.96" "localhost" "127.0.0.1" ];
+      serverAliases = [ "dev.leftychan.net" "10.207.38.96" "10.4.0.96" ];
 
       locations = leftypol_common_location_block;
 
@@ -103,7 +103,47 @@ in
       ];
     };
 
+    virtualHosts."postgrest-local" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:3000";
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
+    # Proxy to authenticate SpamNoticer users
     virtualHosts.spamnoticer = {
+      locations = {
+        "/" = {
+          root = dataDir;
+          index = "auth-proxy.php";
+          tryFiles = "$uri /auth-proxy.php";
+
+          extraConfig = ''
+            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+
+            fastcgi_param SCRIPT_FILENAME ${dataDir}/auth_proxy.php;
+            include ${pkgs.nginx}/conf/fastcgi_params;
+            include ${pkgs.nginx}/conf/fastcgi.conf;
+
+            proxy_buffering off;
+          '';
+        };
+
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
+    # SpamNoticer service (doesn't have own authentication)
+    virtualHosts.spam = {
       serverAliases = [ "10.207.38.96" ];
 
       locations = {
