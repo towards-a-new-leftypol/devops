@@ -51,7 +51,6 @@ let
       leftychan.net = "https://leftychan.net";
       leftychan_dev = "http://${container_ip}:8080";
     };
-    content_directory = "/srv/http/spam";
   };
 
   spamnoticer_static_cfg_filename = pkgs.writeText "settings.json" (builtins.toJSON spamnoticer_static_cfg);
