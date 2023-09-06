@@ -118,20 +118,27 @@ in
     # Proxy to authenticate SpamNoticer users
     virtualHosts.spamnoticer = {
       locations = {
+        "/stylesheets" = {
+          root = dataDir;
+          extraConfig = ''
+            expires 15d;
+          '';
+        };
+
+        "= /main.js" = {
+          root = dataDir;
+          extraConfig = ''
+            expires 15d;
+          '';
+        };
+
         "/" = {
           root = dataDir;
           index = "auth-proxy.php";
           tryFiles = "$uri /auth-proxy.php";
 
           extraConfig = ''
-            # fastcgi_split_path_info ^(.+\.php)(/.+)$;
             fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-
-            fastcgi_param SCRIPT_FILENAME ${dataDir}/auth_proxy.php;
-            include ${pkgs.nginx}/conf/fastcgi_params;
-            include ${pkgs.nginx}/conf/fastcgi.conf;
-
-            proxy_buffering off;
           '';
         };
 

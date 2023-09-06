@@ -61,11 +61,13 @@ in
     8080 # http
     443  # https
     8081 # cytube http
-    3000 # postgREST (should be open on dev only)
-    8300 # SpamNoticer
-    5432 # postgresql
+    # 3000 # postgREST (should be open on dev only)
+    # 8300 # SpamNoticer
+    # 5432 # postgresql
     #80   # apache (mediawiki)
   ];
 
   networking.hostName = "LPDev";
+
+  system.stateVersion = "23.05";
 }
