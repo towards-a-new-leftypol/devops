@@ -45,7 +45,7 @@ let
   container_ip = "10.4.0.96";
 
   spamnoticer_static_cfg = {
-    postgrest_url = "http://postgrest-local:8080";
+    postgrest_url = "http://dev-pgrest-spam.leftychan.net";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan.net = "https://leftychan.net";
