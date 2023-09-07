@@ -68,6 +68,7 @@ in
   ];
 
   networking.hostName = "LPDev";
+  networking.nameservers = [ "213.186.33.99" ];
 
   system.stateVersion = "23.05";
 }

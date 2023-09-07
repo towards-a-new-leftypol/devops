@@ -83,7 +83,7 @@ in
     };
 
     virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftychan.net" "10.207.38.96" "10.4.0.96" ];
+      serverAliases = [ "dev.leftychan.net" ];
 
       locations = leftypol_common_location_block;
 
@@ -102,7 +102,7 @@ in
       ];
     };
 
-    virtualHosts."postgrest-local" = {
+    virtualHosts."dev-pgrest-spam" = {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
@@ -115,7 +115,7 @@ in
     };
 
     # Proxy to authenticate SpamNoticer users
-    virtualHosts.spamnoticer = {
+    virtualHosts."dev-spamnoticer" = {
       locations = {
         "/stylesheets" = {
           root = dataDir;
@@ -150,8 +150,6 @@ in
 
     # SpamNoticer service (doesn't have own authentication)
     virtualHosts.spam = {
-      serverAliases = [ "10.207.38.96" ];
-
       locations = {
         "=/static/settings.json" = {
           alias = spamnoticer_static_cfg_filename;
