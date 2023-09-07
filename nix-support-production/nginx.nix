@@ -77,6 +77,8 @@ in
         "dev.leftychan.net"
         "dev2.leftychan.net"
         "dev3.leftychan.net"
+        "dev-spamnoticer.leftychan.net"
+        "dev-pgrest-spam.leftychan.net"
         "cytube-dev.leftychan.net"
         "drama.leftychan.net"
       ];
@@ -215,6 +217,10 @@ in
     };
 
     virtualHosts."dev.leftychan.net" = {
+      serverAliases = [
+        "dev-spamnoticer.leftychan.net"
+        "dev-pgrest-spam.leftychan.net"
+      ];
       useACMEHost = domain;
       forceSSL = true;
 
