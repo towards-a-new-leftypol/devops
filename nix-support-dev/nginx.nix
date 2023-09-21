@@ -41,15 +41,12 @@ let
     };
   };
 
-  #container_ip = "10.207.38.96";
-  container_ip = "10.4.0.96";
-
   spamnoticer_static_cfg = {
-    postgrest_url = "http://dev-pgrest-spam.leftychan.net";
+    postgrest_url = "https://dev-pgrest-spam.leftychan.net";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan.net = "https://leftychan.net";
-      leftychan_dev = "http://${container_ip}:8080";
+      leftychan_dev = "http://dev.leftychan.net";
     };
   };
 
@@ -102,7 +99,7 @@ in
       ];
     };
 
-    virtualHosts."dev-pgrest-spam" = {
+    virtualHosts."dev-pgrest-spam.leftychan.net" = {
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
@@ -115,19 +112,19 @@ in
     };
 
     # Proxy to authenticate SpamNoticer users
-    virtualHosts."dev-spamnoticer" = {
+    virtualHosts."dev-spamnoticer.leftychan.net" = {
       locations = {
         "/stylesheets" = {
           root = dataDir;
           extraConfig = ''
-            expires 15d;
+            expires 1s;
           '';
         };
 
         "= /main.js" = {
           root = dataDir;
           extraConfig = ''
-            expires 15d;
+            expires 1s;
           '';
         };
 
