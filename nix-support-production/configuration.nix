@@ -10,6 +10,9 @@
     ./cytube-nix/cytube.nix
     ./tor.nix
     ./netdata.nix
+    ./postgresql.nix
+    ./postgrest.nix
+    ./spamnoticer.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -17,16 +20,37 @@
     wget
     gitAndTools.gitFull
     inetutils
+    python3
     ripgrep
+    php
+    phpPackages.composer
+    dig
+    tcpdump
+    (import ./spamnoticer_static.nix {})
   ];
 
   boot.isContainer = true;
-  environment.noXlibs = true;
   
   services.openssh.enable = true;
   services.openssh.startWhenNeeded = false;
-  services.openssh.passwordAuthentication = false;
+  services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
+
+  services.postgrest = {
+    enable = false;
+    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
+    anonRole = "leftypol_anon";
+    jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
+  };
+
+  services.spamnoticer = {
+    enable = false;
+    postgrestUrl = "http://localhost:3000";
+    jwt = lib.fileContents ./secrets/spamnoticer/jwt;
+    spamContentDir = "/srv/http/spam";
+    port = 3300;
+    debug = true;
+  };
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
@@ -37,9 +61,5 @@
   networking.hostName = "LPProd";
   networking.nameservers = [ "213.186.33.99" ];
 
-  # Install new init script
-  system.activationScripts.installInitScript = lib.mkForce ''
-    mkdir -p /sbin
-    ln -fs $systemConfig/init /sbin/init
-  '';
+  system.stateVersion = "23.05";
 }
