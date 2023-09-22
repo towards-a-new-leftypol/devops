@@ -7,3 +7,6 @@
 [submodule "nix-support-dev/pg_spgist_nix"]
 	path = nix-support-dev/pg_spgist_nix
 	url = https://github.com/towards-a-new-leftypol/pg_spgist_nix.git
+[submodule "nix-support-production/pg_spgist_nix"]
+	path = nix-support-production/pg_spgist_nix
+	url = https://github.com/towards-a-new-leftypol/pg_spgist_nix.git
