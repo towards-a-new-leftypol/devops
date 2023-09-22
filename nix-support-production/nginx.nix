@@ -65,6 +65,16 @@ let
     return 200 '${builtins.toJSON data}';
   '';
 
+  spamnoticer_static_cfg = {
+    postgrest_url = "https://pgrest-spam.leftychan.net";
+    jwt = builtins.readFile ./secrets/spamnoticer/jwt;
+    website_urls = {
+      leftychan = "https://leftychan.net";
+    };
+  };
+
+  spamnoticer_static_cfg_filename = pkgs.writeText "settings.json" (builtins.toJSON spamnoticer_static_cfg);
+
 in
 
 {
