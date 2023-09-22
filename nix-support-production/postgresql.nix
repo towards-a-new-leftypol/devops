@@ -17,8 +17,6 @@ in
       package = pkgs.postgresql;
       authentication = ''
           host    all     all     localhost            md5
-          host    all     all     10.207.38.0/24       md5
-          host    all     all     10.4.0.0/24          md5
       '';
       settings = {
         shared_buffers = "2GB";
