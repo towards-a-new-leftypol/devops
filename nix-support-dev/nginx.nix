@@ -57,7 +57,7 @@ in
 {
   services.nginx = {
     enable = true;
-
+    recommendedGzipSettings = true;
     clientMaxBodySize = "50m";
 
     appendHttpConfig = ''
@@ -103,6 +103,7 @@ in
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
+          recommendedProxySettings = true;
         };
       };
 
