@@ -53,10 +53,12 @@ let
   };
 
   serverConfig."m.server" = "matrix.leftychan.net";
+
   clientConfig = {
     "m.homeserver".base_url = "https://matrix.leftychan.net";
     "m.identity_server" = {};
   };
+
   mkWellKnown = data: ''
     add_header Content-Type application/json;
     add_header Access-Control-Allow-Origin *;
@@ -81,15 +83,15 @@ in
         "dev-pgrest-spam.leftychan.net"
         "cytube-dev.leftychan.net"
         "drama.leftychan.net"
+        "spamnoticer.leftychan.net"
+        "pgrest-spam.leftychan.net"
       ];
     };
   };
 
   services.nginx = {
     enable = true;
-
     recommendedGzipSettings = true;
-
     clientMaxBodySize = "80m";
 
     appendHttpConfig = ''
@@ -97,8 +99,6 @@ in
     '';
 
     recommendedTlsSettings = true;
-
-    # recommendedProxySettings = true;
 
     virtualHosts.${domain} = {
       enableACME = true;
@@ -259,6 +259,70 @@ in
         { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
+
+    # Proxy to authenticate SpamNoticer users
+    virtualHosts."spamnoticer.leftychan.net" = {
+      locations = {
+        "/stylesheets" = {
+          root = dataDir;
+          extraConfig = ''
+            expires 1s;
+          '';
+        };
+
+        "= /main.js" = {
+          root = dataDir;
+          extraConfig = ''
+            expires 1s;
+          '';
+        };
+
+        "/" = {
+          root = dataDir;
+          index = "auth-proxy.php";
+          tryFiles = "$uri /auth-proxy.php";
+
+          extraConfig = ''
+            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+          '';
+        };
+
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
+    # SpamNoticer service (doesn't have own authentication)
+    virtualHosts.spam = {
+      locations = {
+        "=/static/settings.json" = {
+          alias = spamnoticer_static_cfg_filename;
+        };
+        "/" = {
+          proxyPass = "http://127.0.0.1:${builtins.toString config.services.spamnoticer.port}";
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8300; ssl = false; }
+      ];
+    };
+
+    virtualHosts."pgrest-spam.leftychan.net" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:3000";
+          recommendedProxySettings = true;
+        };
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+      ];
+    };
+
   };
 
   users.users.${app} = {
