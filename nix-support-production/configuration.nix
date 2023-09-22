@@ -1,5 +1,10 @@
 { config, pkgs, lib, ... }:
 
+let
+  spamnoticer_dbpassword = lib.fileContents ./secrets/spamnoticer/dbpassword;
+
+in
+
 {
   imports = [
     <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
