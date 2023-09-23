@@ -272,6 +272,9 @@ in
 
     # Proxy to authenticate SpamNoticer users
     virtualHosts."spamnoticer.leftychan.net" = {
+      useACMEHost = domain;
+      forceSSL = true;
+
       locations = {
         "/stylesheets" = {
           root = dataDir;
@@ -301,6 +304,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = false; }
       ];
     };
 
@@ -321,6 +325,9 @@ in
     };
 
     virtualHosts."pgrest-spam.leftychan.net" = {
+      useACMEHost = domain;
+      forceSSL = true;
+
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
@@ -330,6 +337,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = false; }
       ];
     };
 
