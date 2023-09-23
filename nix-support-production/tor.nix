@@ -3,14 +3,16 @@
 {
   services.tor = {
     enable = true;
-    hiddenServices = {
-      leftypolOnion = {
-        name = "leftypol-onion";
-        version = 3;
-        map = [
-          { port = 80; toPort = 8081; }
-        ];
-      };
+    relay.onionServices.leftypol-onion = {
+      version = 3;
+      map = [
+        {
+          port = 80;
+          target = {
+            port = 8081;
+          };
+        }
+      ];
     };
   };
 }
