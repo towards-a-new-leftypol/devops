@@ -79,10 +79,10 @@ in
 
 {
   security.acme = {
-    email = "paul_cockshott@protonmail.com";
     acceptTerms = true;
     certs."${domain}" = {
       group = "nginx";
+      email = "paul_cockshott@protonmail.com";
       extraDomainNames = [
         "www.leftychan.net"
         "tv.leftychan.net"
