@@ -304,7 +304,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
@@ -337,7 +337,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
