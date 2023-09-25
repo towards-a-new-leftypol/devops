@@ -75,7 +75,7 @@ let
 
   spamnoticer_static_cfg = {
     #postgrest_url = "https://pgrest-spam.leftychan.net";
-    postgrest_subdomain = "dev-pgrest-spam";
+    postgrest_subdomain = "pgrest-spam";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan = "https://leftychan.net";
