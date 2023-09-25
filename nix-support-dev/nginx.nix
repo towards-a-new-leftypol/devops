@@ -111,9 +111,6 @@ in
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
           recommendedProxySettings = true;
-          extraConfig = ''
-            add_header Access-Control-Allow-Origin "dev-spamnoticer.leftychan.net";
-          '';
         };
       };
 
