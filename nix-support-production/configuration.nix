@@ -42,14 +42,14 @@ in
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
   services.postgrest = {
-    enable = false;
+    enable = true;
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
     anonRole = "leftypol_anon";
     jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
   };
 
   services.spamnoticer = {
-    enable = false;
+    enable = true;
     postgrestUrl = "http://localhost:3000";
     jwt = lib.fileContents ./secrets/spamnoticer/jwt;
     spamContentDir = "/srv/http/spam";
