@@ -7,7 +7,7 @@ pkgs.stdenv.mkDerivation {
   src = builtins.fetchGit {
     url = "https://git.leftychan.net/0/spamnoticer_static.git";
     #ref = "master";
-    rev = "7be80cb4081a83814ced9e4c1bdaf8298dddf0bb";
+    rev = "358b63564a3b9495a5732a08da80a0ef5c708f27";
   };
 
   installPhase = ''
