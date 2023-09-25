@@ -4,6 +4,7 @@ let
   app = "lainchan";
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
+  onion = "wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion";
 
   # Since we are proxied by cloudflare, read the real ip from the header
   cloudflareExtraConfig = ''
@@ -12,7 +13,7 @@ let
 
     real_ip_header CF-Connecting-IP;
 
-    add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
+    add_header Onion-Location http://${onion}$request_uri;
   '';
 
 
@@ -82,6 +83,32 @@ let
 
   spamnoticer_static_cfg_filename = pkgs.writeText "settings.json" (builtins.toJSON spamnoticer_static_cfg);
 
+  spamnoticer_common_location_block = {
+    "/stylesheets" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1s;
+      '';
+    };
+
+    "= /main.js" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 1s;
+      '';
+    };
+
+    "/" = {
+      root = dataDir;
+      index = "auth-proxy.php";
+      tryFiles = "$uri /auth-proxy.php";
+
+      extraConfig = ''
+        fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+      '';
+    };
+  };
+
 in
 
 {
@@ -113,6 +140,7 @@ in
 
     appendHttpConfig = ''
       proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=nginx_cache:10M max_size=1G inactive=2d;
+      server_names_hash_bucket_size  128;
     '';
 
     recommendedTlsSettings = true;
@@ -159,18 +187,6 @@ in
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
-
-    virtualHosts."*.onion" = {
-      locations = leftypol_common_location_block;
-
-      extraConfig = ''
-        port_in_redirect off;
-      '';
-
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
     };
 
@@ -282,36 +298,35 @@ in
       useACMEHost = domain;
       forceSSL = true;
 
-      locations = {
-        "/stylesheets" = {
-          root = dataDir;
-          extraConfig = ''
-            expires 1s;
-          '';
-        };
+      locations = spamnoticer_common_location_block;
 
-        "= /main.js" = {
-          root = dataDir;
-          extraConfig = ''
-            expires 1s;
-          '';
-        };
-
-        "/" = {
-          root = dataDir;
-          index = "auth-proxy.php";
-          tryFiles = "$uri /auth-proxy.php";
-
-          extraConfig = ''
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
-
-      };
+      extraConfig = ''
+        add_header Onion-Location http://spamnoticer.${onion}$request_uri;
+      '';
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
         { addr = "0.0.0.0"; port = 443; ssl = true; }
+      ];
+    };
+
+    virtualHosts."spamnoticer.${onion}" = {
+      locations = spamnoticer_common_location_block;
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
+
+    virtualHosts."${onion}" = {
+      locations = leftypol_common_location_block;
+
+      extraConfig = ''
+        port_in_redirect off;
+      '';
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
       ];
     };
 

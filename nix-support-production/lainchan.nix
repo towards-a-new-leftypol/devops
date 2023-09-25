@@ -62,7 +62,7 @@ in
   };
 
   services.cytube = {
-    enable = true;
+    enable = false;
     httpPort = 8083;
     publicPort = 443;
 
