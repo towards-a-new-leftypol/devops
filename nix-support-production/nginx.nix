@@ -24,7 +24,14 @@ let
       '';
     };
 
-    "~* \.(jpg|jpeg|png|gif|ico|css|js|mp4|mp3|webm|pdf|djvu|bmp|zip|xz|epub)$" = {
+    "~* \.(jpg|jpeg|png|gif|ico|mp4|mp3|webm|bmp)$" = {
+      root = dataDir;
+      extraConfig = ''
+        expires 30d;
+      '';
+    };
+
+    "~* \.(css|js|pdf|djvu|zip|xz|epub)$" = {
       root = dataDir;
       extraConfig = ''
         expires 1h;
@@ -332,6 +339,9 @@ in
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
           recommendedProxySettings = true;
+          extraConfig = ''
+            add_header Access-Control-Allow-Origin "spamnoticer.leftychan.net";
+          '';
         };
       };
 
