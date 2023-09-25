@@ -319,6 +319,23 @@ in
       ];
     };
 
+    virtualHosts."pgrest-spam.${onion}" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:3000";
+          recommendedProxySettings = true;
+          extraConfig = ''
+            proxy_hide_header 'Access-Control-Allow-Origin';
+            add_header 'Access-Control-Allow-Origin' '*';
+          '';
+        };
+      };
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
+
     virtualHosts."${onion}" = {
       locations = leftypol_common_location_block;
 
