@@ -130,6 +130,7 @@ in
         "drama.leftychan.net"
         "spamnoticer.leftychan.net"
         "pgrest-spam.leftychan.net"
+        "netdata.leftychan.net"
       ];
     };
   };
@@ -221,6 +222,9 @@ in
     };
 
     virtualHosts."netdata.leftychan.net" = {
+      forceSSL = true;
+      useACMEHost = domain;
+
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:8084";
@@ -237,6 +241,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
@@ -254,6 +259,7 @@ in
       serverAliases = [
         "dev-spamnoticer.leftychan.net"
         "dev-pgrest-spam.leftychan.net"
+        "cytube-dev.leftychan.net"
       ];
       useACMEHost = domain;
       forceSSL = true;
@@ -269,22 +275,6 @@ in
             proxy_set_header        X-Forwarded-Host $host;
             proxy_set_header        X-Forwarded-Server $host;
           '';
-        };
-      };
-
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
-
-    virtualHosts."cytube-dev.leftychan.net" = {
-      useACMEHost = domain;
-      forceSSL = true;
-
-      locations = {
-        "/" = {
-          proxyPass = "http://10.125.114.96:8080";
         };
       };
 
