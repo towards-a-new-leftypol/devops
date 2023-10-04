@@ -309,6 +309,19 @@ in
       ];
     };
 
+    virtualHosts."git.${onion}" = {
+      locations = {
+        "/" = {
+          proxyPass = "https://git.leftychan.net";
+          recommendedProxySettings = true;
+        };
+      };
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
+
     virtualHosts."pgrest-spam.${onion}" = {
       locations = {
         "/" = {
