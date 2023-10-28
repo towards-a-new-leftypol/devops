@@ -4,7 +4,8 @@ let
   app = "lainchan";
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
-  onion = "wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion";
+  onion = "leftychans5gstl4zee2ecopkv6qvzsrbikwxnejpylwcho2yvh4owad.onion";
+  old_onion = "wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion";
 
   # Since we are proxied by cloudflare, read the real ip from the header
   cloudflareExtraConfig = ''
@@ -344,6 +345,27 @@ in
 
       extraConfig = ''
         port_in_redirect off;
+      '';
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
+
+    virtualHosts."${old_onion}" = {
+      serverAliases = [
+        "spamnoticer.${old_onion}"
+        "git.${old_onion}"
+        "pgrest-spam.${old_onion}"
+      ];
+
+      extraConfig = ''
+        port_in_redirect off;
+        set $new_host $host;
+        if ($host ~* ^(.*)${old_onion}$) {
+          set $new_host $1${onion};
+        }
+        rewrite ^/(.*)$ http://$new_host/$1 permanent;
       '';
 
       listen = [
