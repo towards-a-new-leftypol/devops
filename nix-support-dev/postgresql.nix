@@ -14,7 +14,7 @@ in
   services.postgresql = {
       enable = true;
       enableTCPIP = true;
-      package = pkgs.postgresql;
+      package = pkgs.postgresql_14;
       authentication = ''
           host    all     all     localhost            md5
           host    all     all     10.207.38.0/24       md5
