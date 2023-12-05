@@ -40,6 +40,8 @@ in
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
+  nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
+
   services.postgrest = {
     enable = true;
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
