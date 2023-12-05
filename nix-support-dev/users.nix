@@ -9,7 +9,7 @@
  _/        _/        _/    _/  _/          _/  _/       
 _/_/_/_/  _/        _/_/_/      _/_/_/      _/          
 
-(leftypol development container, NixOS 23.05)
+(leftypol development container, NixOS 23.11)
   '';
 
   users.extraUsers.admin = {

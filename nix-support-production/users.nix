@@ -9,7 +9,7 @@
  _/        _/        _/        _/        _/    _/  _/    _/      
 _/_/_/_/  _/        _/        _/          _/_/      _/_/_/       
                                                                  
-(Production container, NixOS 20.09)
+(Production container, NixOS 23.11)
   '';
 
   users.extraUsers.admin = {
