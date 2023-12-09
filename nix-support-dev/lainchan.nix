@@ -2,9 +2,9 @@
 
 let
   app = "lainchan";
-  phpPkg = pkgs.php82;
-  phpPkgPackages = pkgs.php82Packages;
-  phpPkgExtensions = pkgs.php82Extensions;
+  phpPkg = pkgs.php83;
+  phpPkgPackages = pkgs.php83Packages;
+  phpPkgExtensions = pkgs.php83Extensions;
 in
 
 {
