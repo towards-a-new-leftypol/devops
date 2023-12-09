@@ -2,6 +2,9 @@
 
 let
   app = "lainchan";
+  phpPkg = pkgs.php82;
+  phpPkgPackages = pkgs.php82Packages;
+  phpPkgExtensions = pkgs.php82Extensions;
 in
 
 {
@@ -13,7 +16,9 @@ in
     which
     ffmpeg
     libiconv
-    phpExtensions.memcached
+    phpPkg
+    phpPkgPackages.composer
+    phpPkgExtensions.memcached
   ];
 
   # Need to add a row to theme_settings:
@@ -23,6 +28,7 @@ in
   services.phpfpm.pools.${app} = {
     user = app;
     group = app;
+    phpPackage = phpPkg;
 
     settings = {
       "listen.owner" = config.services.nginx.user;
@@ -48,7 +54,7 @@ in
       gifsicle
       imagemagick
       graphicsmagick
-      php
+      phpPkg
       which
       ffmpeg
       ghostscript
