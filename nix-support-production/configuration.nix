@@ -27,8 +27,6 @@ in
     inetutils
     python3
     ripgrep
-    php
-    phpPackages.composer
     dig
     tcpdump
     (import ./spamnoticer_static.nix {})
