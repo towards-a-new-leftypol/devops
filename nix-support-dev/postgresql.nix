@@ -1,7 +1,8 @@
 { config, pkgs, lib, ... }:
 
 let
-  spgist = pkgs.callPackage ./pg_spgist_nix/default.nix {};
+  pg = pkgs.postgresql_14;
+  spgist = pkgs.callPackage ./pg_spgist_nix/default.nix { postgresql = pg; };
 
   # initScript = builtins.toFile "init-script.sql" (
   #   (builtins.readFile "${spgist}/init.sql") + ''
@@ -14,7 +15,7 @@ in
   services.postgresql = {
       enable = true;
       enableTCPIP = true;
-      package = pkgs.postgresql_14;
+      package = pg;
       authentication = ''
           host    all     all     localhost            md5
           host    all     all     10.207.38.0/24       md5
