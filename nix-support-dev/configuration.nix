@@ -28,6 +28,7 @@ in
     ripgrep
     dig
     tcpdump
+    rsync
     (import ./spamnoticer_static.nix {})
   ];
 
