@@ -5,6 +5,7 @@ let
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
   onion = "leftychans5gstl4zee2ecopkv6qvzsrbikwxnejpylwcho2yvh4owad.onion";
+  eep = "leftychmxz3wczbd4add4atspbqevzrtwf2sjobm3waqosy2dbua.b32.i2p";
   old_onion = "wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion";
 
   # Since we are proxied by cloudflare, read the real ip from the header
@@ -303,6 +304,10 @@ in
     };
 
     virtualHosts."spamnoticer.${onion}" = {
+      serverAliases = [
+        "spamnoticer.${eep}"
+      ];
+
       locations = spamnoticer_common_location_block;
 
       listen = [
@@ -311,6 +316,10 @@ in
     };
 
     virtualHosts."git.${onion}" = {
+      serverAliases = [
+        "git.${eep}"
+      ];
+
       locations = {
         "/" = {
           proxyPass = "https://git.leftychan.net";
@@ -324,6 +333,10 @@ in
     };
 
     virtualHosts."pgrest-spam.${onion}" = {
+      serverAliases = [
+        "pgrest-spam.${eep}"
+      ];
+
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
@@ -341,6 +354,10 @@ in
     };
 
     virtualHosts."${onion}" = {
+      serverAliases = [
+        eep
+      ];
+
       locations = leftypol_common_location_block;
 
       extraConfig = ''
