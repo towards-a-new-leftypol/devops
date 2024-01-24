@@ -304,10 +304,6 @@ in
     };
 
     virtualHosts."spamnoticer.${onion}" = {
-      serverAliases = [
-        "spamnoticer.${eep}"
-      ];
-
       locations = spamnoticer_common_location_block;
 
       listen = [
@@ -316,10 +312,6 @@ in
     };
 
     virtualHosts."git.${onion}" = {
-      serverAliases = [
-        "git.${eep}"
-      ];
-
       locations = {
         "/" = {
           proxyPass = "https://git.leftychan.net";
@@ -333,10 +325,6 @@ in
     };
 
     virtualHosts."pgrest-spam.${onion}" = {
-      serverAliases = [
-        "pgrest-spam.${eep}"
-      ];
-
       locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:3000";
