@@ -14,6 +14,7 @@ in
     ./lainchan.nix
     ./cytube-nix/cytube.nix
     ./tor.nix
+    ./i2pd.nix
     ./netdata.nix
     ./postgresql.nix
     ./postgrest.nix
