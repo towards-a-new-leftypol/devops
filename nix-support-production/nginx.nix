@@ -5,7 +5,8 @@ let
   domain = "leftychan.net";
   dataDir = "/srv/http/${app}.leftypol.org";
   onion = "leftychans5gstl4zee2ecopkv6qvzsrbikwxnejpylwcho2yvh4owad.onion";
-  eep = "leftychmxz3wczbd4add4atspbqevzrtwf2sjobm3waqosy2dbua.b32.i2p";
+  eep_b32 = "leftychmxz3wczbd4add4atspbqevzrtwf2sjobm3waqosy2dbua.b32.i2p";
+  eep = "leftychan.i2p";
   old_onion = "wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion";
 
   # Since we are proxied by cloudflare, read the real ip from the header
@@ -343,6 +344,7 @@ in
 
     virtualHosts."${onion}" = {
       serverAliases = [
+        eep_b32
         eep
       ];
 
