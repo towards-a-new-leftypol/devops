@@ -380,6 +380,18 @@ in
       ];
     };
 
+    virtualHosts.onion-default = {
+      default = true;
+
+      locations."/" = {
+        return = "404";
+      };
+
+      listen = [
+        { addr = "127.0.0.1"; port = 8081; ssl = false; }
+      ];
+    };
+
     # SpamNoticer service (doesn't have own authentication)
     virtualHosts.spam = {
       locations = {
