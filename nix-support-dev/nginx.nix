@@ -42,6 +42,10 @@ let
       '';
     };
 
+    "~ ^/.git" = {
+      return = "404";
+    };
+
     "/" = {
       root = dataDir;
       index = "index.html index.php";
