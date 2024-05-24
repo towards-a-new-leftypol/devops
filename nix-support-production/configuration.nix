@@ -7,18 +7,18 @@ in
 
 {
   imports = [
-    <nixpkgs/nixos/modules/virtualisation/lxc-container.nix>
+    ./hardware-configuration.nix
     ./users.nix
-    ./nginx.nix
-    ./mysql.nix
-    ./lainchan.nix
-    ./cytube-nix/cytube.nix
-    ./tor.nix
-    ./i2pd.nix
-    ./netdata.nix
-    ./postgresql.nix
-    ./postgrest.nix
-    ./spamnoticer.nix
+    # ./nginx.nix
+    # ./mysql.nix
+    # ./lainchan.nix
+    # ./cytube-nix/cytube.nix
+    # ./tor.nix
+    # ./i2pd.nix
+    # ./netdata.nix
+    # ./postgresql.nix
+    # ./postgrest.nix
+    # ./spamnoticer.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -34,39 +34,42 @@ in
     (import ./spamnoticer_static.nix {})
   ];
 
-  boot.isContainer = true;
+  # Use the GRUB 2 boot loader.
+  boot.loader.grub.enable = true;
+  boot.loader.grub.device = "/dev/sda";
   
   services.openssh.enable = true;
   services.openssh.startWhenNeeded = false;
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
+  time.timeZone = "UTC";
+
   nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
 
-  services.postgrest = {
-    enable = true;
-    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
-    anonRole = "leftypol_anon";
-    jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
-  };
+  # services.postgrest = {
+  #   enable = true;
+  #   connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
+  #   anonRole = "leftypol_anon";
+  #   jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
+  # };
 
-  services.spamnoticer = {
-    enable = true;
-    postgrestUrl = "http://localhost:3000";
-    jwt = lib.fileContents ./secrets/spamnoticer/jwt;
-    spamContentDir = "/srv/http/spam";
-    port = 3300;
-    debug = true;
-  };
+  # services.spamnoticer = {
+  #   enable = true;
+  #   postgrestUrl = "http://localhost:3000";
+  #   jwt = lib.fileContents ./secrets/spamnoticer/jwt;
+  #   spamContentDir = "/srv/http/spam";
+  #   port = 3300;
+  #   debug = true;
+  # };
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
-    8080 # http
+    80	 # http
     443  # https
   ];
 
-  networking.hostName = "LPProd";
-  networking.nameservers = [ "213.186.33.99" ];
+  networking.hostName = "Spaceship";
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "23.11";
 }
