@@ -9,16 +9,16 @@ in
   imports = [
     ./hardware-configuration.nix
     ./users.nix
-    # ./nginx.nix
-    # ./mysql.nix
-    # ./lainchan.nix
-    # ./cytube-nix/cytube.nix
+    ./nginx.nix
+    ./mysql.nix
+    ./lainchan.nix
+    ./cytube-nix/cytube.nix
     # ./tor.nix
     # ./i2pd.nix
-    # ./netdata.nix
-    # ./postgresql.nix
-    # ./postgrest.nix
-    # ./spamnoticer.nix
+    ./netdata.nix
+    ./postgresql.nix
+    ./postgrest.nix
+    ./spamnoticer.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -47,26 +47,32 @@ in
 
   nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
 
-  # services.postgrest = {
-  #   enable = true;
-  #   connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
-  #   anonRole = "leftypol_anon";
-  #   jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
-  # };
+  services.postgrest = {
+    enable = true;
+    connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
+    anonRole = "leftypol_anon";
+    jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
+  };
 
-  # services.spamnoticer = {
-  #   enable = true;
-  #   postgrestUrl = "http://localhost:3000";
-  #   jwt = lib.fileContents ./secrets/spamnoticer/jwt;
-  #   spamContentDir = "/srv/http/spam";
-  #   port = 3300;
-  #   debug = true;
-  # };
+  services.spamnoticer = {
+    enable = true;
+    postgrestUrl = "http://localhost:3000";
+    jwt = lib.fileContents ./secrets/spamnoticer/jwt;
+    spamContentDir = "/srv/http/spam";
+    port = 3300;
+    debug = true;
+  };
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
     80	 # http
     443  # https
+
+    #DELETEME temporary
+    8084 #netdata 
+    # 3300 #spamnoticer
+    3000 #postgrest
+    8300 #spamnoticer
   ];
 
   networking.hostName = "Spaceship";

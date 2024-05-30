@@ -82,7 +82,8 @@ let
 
   spamnoticer_static_cfg = {
     #postgrest_url = "https://pgrest-spam.leftychan.net";
-    postgrest_subdomain = "pgrest-spam";
+    #postgrest_subdomain = "pgrest-spam";
+    postgrest_url = "http://157.173.196.94:3000";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan = "https://leftychan.net";
@@ -120,6 +121,7 @@ let
 in
 
 {
+  /*
   security.acme = {
     acceptTerms = true;
     certs."${domain}" = {
@@ -141,6 +143,7 @@ in
       ];
     };
   };
+  */
 
   services.nginx = {
     enable = true;
@@ -155,8 +158,9 @@ in
     recommendedTlsSettings = true;
 
     virtualHosts.${domain} = {
-      enableACME = true;
-      forceSSL = true;
+      #enableACME = true;
+      #forceSSL = true;
+      forceSSL = false;
 
       locations = leftypol_common_location_block // {
         "= /.well-known/matrix/server".extraConfig = mkWellKnown serverConfig; 
@@ -166,235 +170,235 @@ in
       extraConfig = cloudflareExtraConfig;
 
       listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
+        { addr = "0.0.0.0"; port = 80; ssl = false; }
+        #{ addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
-    virtualHosts."www.leftychan.net" = {
-      /*
-      serverAliases = [
-        "dev.leftychan.net"
-        "dev2.leftychan.net"
-        "dev3.leftychan.net"
-        #"bunkerchan.red"
-        #"leftychan.org"
-        #"bunkerchan.net"
-        #"leftypol.org"
-      ];
-      */
+    # virtualHosts."www.leftychan.net" = {
+    #   /*
+    #   serverAliases = [
+    #     "dev.leftychan.net"
+    #     "dev2.leftychan.net"
+    #     "dev3.leftychan.net"
+    #     #"bunkerchan.red"
+    #     #"leftychan.org"
+    #     #"bunkerchan.net"
+    #     #"leftypol.org"
+    #   ];
+    #   */
 
-      useACMEHost = domain;
-      addSSL = true;
+    #   useACMEHost = domain;
+    #   addSSL = true;
 
-      locations = {
-        "/" = {
-          return = "$scheme://${domain}$request_uri";
-        };
-      };
+    #   locations = {
+    #     "/" = {
+    #       return = "$scheme://${domain}$request_uri";
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    virtualHosts."tv.leftychan.net" = {
-      forceSSL = true;
-      #addSSL = true;
-      useACMEHost = domain;
+    # virtualHosts."tv.leftychan.net" = {
+    #   #forceSSL = true;
+    #   #addSSL = true;
+    #   #useACMEHost = domain;
 
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:8083";
-          proxyWebsockets = true;
-        };
-      };
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:8083";
+    #       proxyWebsockets = true;
+    #     };
+    #   };
 
-      extraConfig = ''
-        proxy_redirect          off;
-        proxy_http_version      1.1;
-        proxy_set_header        Host $host;
-        proxy_set_header        X-Real-IP $remote_addr;
-        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header        X-Forwarded-Proto $scheme;
-        proxy_set_header        X-Forwarded-Host $host;
-        proxy_set_header        X-Forwarded-Server $host;
-      '';
+    #   extraConfig = ''
+    #     proxy_redirect          off;
+    #     proxy_http_version      1.1;
+    #     proxy_set_header        Host $host;
+    #     proxy_set_header        X-Real-IP $remote_addr;
+    #     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    #     proxy_set_header        X-Forwarded-Proto $scheme;
+    #     proxy_set_header        X-Forwarded-Host $host;
+    #     proxy_set_header        X-Forwarded-Server $host;
+    #   '';
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 80; ssl = false; }
+    #     #{ addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    virtualHosts."netdata.leftychan.net" = {
-      forceSSL = true;
-      useACMEHost = domain;
+    # virtualHosts."netdata.leftychan.net" = {
+    #   forceSSL = true;
+    #   useACMEHost = domain;
 
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:8084";
-          extraConfig = ''
-            proxy_set_header        Host $host;
-            proxy_set_header        X-Real-IP $remote_addr;
-            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header        X-Forwarded-Proto $scheme;
-            proxy_set_header        X-Forwarded-Host $host;
-            proxy_set_header        X-Forwarded-Server $host;
-          '';
-        };
-      };
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:8084";
+    #       extraConfig = ''
+    #         proxy_set_header        Host $host;
+    #         proxy_set_header        X-Real-IP $remote_addr;
+    #         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    #         proxy_set_header        X-Forwarded-Proto $scheme;
+    #         proxy_set_header        X-Forwarded-Host $host;
+    #         proxy_set_header        X-Forwarded-Server $host;
+    #       '';
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    virtualHosts."drama.leftychan.net" = {
-      useACMEHost = domain;
-      forceSSL = true;
-      root = "/srv/http/drama";
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    # virtualHosts."drama.leftychan.net" = {
+    #   useACMEHost = domain;
+    #   forceSSL = true;
+    #   root = "/srv/http/drama";
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    virtualHosts."dev.leftychan.net" = {
-      serverAliases = [
-        "dev-spamnoticer.leftychan.net"
-        "dev-pgrest-spam.leftychan.net"
-        "cytube-dev.leftychan.net"
-      ];
-      useACMEHost = domain;
-      forceSSL = true;
+    # virtualHosts."dev.leftychan.net" = {
+    #   serverAliases = [
+    #     "dev-spamnoticer.leftychan.net"
+    #     "dev-pgrest-spam.leftychan.net"
+    #     "cytube-dev.leftychan.net"
+    #   ];
+    #   useACMEHost = domain;
+    #   forceSSL = true;
 
-      locations = {
-        "/" = {
-          proxyPass = "http://10.125.114.96:8080";
-          extraConfig = ''
-            proxy_set_header        Host $host;
-            proxy_set_header        X-Real-IP $remote_addr;
-            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header        X-Forwarded-Proto $scheme;
-            proxy_set_header        X-Forwarded-Host $host;
-            proxy_set_header        X-Forwarded-Server $host;
-          '';
-        };
-      };
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://10.125.114.96:8080";
+    #       extraConfig = ''
+    #         proxy_set_header        Host $host;
+    #         proxy_set_header        X-Real-IP $remote_addr;
+    #         proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    #         proxy_set_header        X-Forwarded-Proto $scheme;
+    #         proxy_set_header        X-Forwarded-Host $host;
+    #         proxy_set_header        X-Forwarded-Server $host;
+    #       '';
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    # Proxy to authenticate SpamNoticer users
-    virtualHosts."spamnoticer.leftychan.net" = {
-      useACMEHost = domain;
-      forceSSL = true;
+    # # Proxy to authenticate SpamNoticer users
+    # virtualHosts."spamnoticer.leftychan.net" = {
+    #   useACMEHost = domain;
+    #   forceSSL = true;
 
-      locations = spamnoticer_common_location_block;
+    #   locations = spamnoticer_common_location_block;
 
-      extraConfig = ''
-        add_header Onion-Location http://spamnoticer.${onion}$request_uri;
-      '';
+    #   extraConfig = ''
+    #     add_header Onion-Location http://spamnoticer.${onion}$request_uri;
+    #   '';
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
-    virtualHosts."spamnoticer.${onion}" = {
-      locations = spamnoticer_common_location_block;
+    # virtualHosts."spamnoticer.${onion}" = {
+    #   locations = spamnoticer_common_location_block;
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    virtualHosts."git.${onion}" = {
-      locations = {
-        "/" = {
-          proxyPass = "https://git.leftychan.net";
-          recommendedProxySettings = true;
-        };
-      };
+    # virtualHosts."git.${onion}" = {
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "https://git.leftychan.net";
+    #       recommendedProxySettings = true;
+    #     };
+    #   };
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    virtualHosts."pgrest-spam.${onion}" = {
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:3000";
-          recommendedProxySettings = true;
-          extraConfig = ''
-            proxy_hide_header 'Access-Control-Allow-Origin';
-            add_header 'Access-Control-Allow-Origin' '*';
-          '';
-        };
-      };
+    # virtualHosts."pgrest-spam.${onion}" = {
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:3000";
+    #       recommendedProxySettings = true;
+    #       extraConfig = ''
+    #         proxy_hide_header 'Access-Control-Allow-Origin';
+    #         add_header 'Access-Control-Allow-Origin' '*';
+    #       '';
+    #     };
+    #   };
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    virtualHosts."${onion}" = {
-      serverAliases = [
-        eep_b32
-        eep
-      ];
+    # virtualHosts."${onion}" = {
+    #   serverAliases = [
+    #     eep_b32
+    #     eep
+    #   ];
 
-      locations = leftypol_common_location_block;
+    #   locations = leftypol_common_location_block;
 
-      extraConfig = ''
-        port_in_redirect off;
-      '';
+    #   extraConfig = ''
+    #     port_in_redirect off;
+    #   '';
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    virtualHosts."${old_onion}" = {
-      serverAliases = [
-        "spamnoticer.${old_onion}"
-        "git.${old_onion}"
-        "pgrest-spam.${old_onion}"
-      ];
+    # virtualHosts."${old_onion}" = {
+    #   serverAliases = [
+    #     "spamnoticer.${old_onion}"
+    #     "git.${old_onion}"
+    #     "pgrest-spam.${old_onion}"
+    #   ];
 
-      extraConfig = ''
-        port_in_redirect off;
-        set $new_host $host;
-        if ($host ~* ^(.*)${old_onion}$) {
-          set $new_host $1${onion};
-        }
-        rewrite ^/(.*)$ http://$new_host/$1 permanent;
-      '';
+    #   extraConfig = ''
+    #     port_in_redirect off;
+    #     set $new_host $host;
+    #     if ($host ~* ^(.*)${old_onion}$) {
+    #       set $new_host $1${onion};
+    #     }
+    #     rewrite ^/(.*)$ http://$new_host/$1 permanent;
+    #   '';
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    virtualHosts.onion-default = {
-      default = true;
+    # virtualHosts.onion-default = {
+    #   default = true;
 
-      locations."/" = {
-        return = "404";
-      };
+    #   locations."/" = {
+    #     return = "404";
+    #   };
 
-      listen = [
-        { addr = "127.0.0.1"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "127.0.0.1"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
     # SpamNoticer service (doesn't have own authentication)
     virtualHosts.spam = {
@@ -412,22 +416,22 @@ in
       ];
     };
 
-    virtualHosts."pgrest-spam.leftychan.net" = {
-      useACMEHost = domain;
-      forceSSL = true;
+    # virtualHosts."pgrest-spam.leftychan.net" = {
+    #   useACMEHost = domain;
+    #   forceSSL = true;
 
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:3000";
-          recommendedProxySettings = true;
-        };
-      };
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:3000";
+    #       recommendedProxySettings = true;
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8080; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
   };
 
