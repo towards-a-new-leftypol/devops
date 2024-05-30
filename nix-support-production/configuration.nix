@@ -13,8 +13,8 @@ in
     ./mysql.nix
     ./lainchan.nix
     ./cytube-nix/cytube.nix
-    # ./tor.nix
-    # ./i2pd.nix
+    ./tor.nix
+    ./i2pd.nix
     ./netdata.nix
     ./postgresql.nix
     ./postgrest.nix
@@ -69,10 +69,10 @@ in
     443  # https
 
     #DELETEME temporary
-    8084 #netdata 
+    #8084 #netdata 
     # 3300 #spamnoticer
-    3000 #postgrest
-    8300 #spamnoticer
+    #3000 #postgrest
+    #8300 #spamnoticer
   ];
 
   networking.hostName = "Spaceship";
