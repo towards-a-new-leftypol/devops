@@ -11,8 +11,31 @@ let
 
   # Since we are proxied by cloudflare, read the real ip from the header
   cloudflareExtraConfig = ''
-    set_real_ip_from 127.0.0.1;
-    set_real_ip_from ::1;
+    # Cloudflare IPv4 addresses
+    set_real_ip_from 173.245.48.0/20;
+    set_real_ip_from 103.21.244.0/22;
+    set_real_ip_from 103.22.200.0/22;
+    set_real_ip_from 103.31.4.0/22;
+    set_real_ip_from 141.101.64.0/18;
+    set_real_ip_from 108.162.192.0/18;
+    set_real_ip_from 190.93.240.0/20;
+    set_real_ip_from 188.114.96.0/20;
+    set_real_ip_from 197.234.240.0/22;
+    set_real_ip_from 198.41.128.0/17;
+    set_real_ip_from 162.158.0.0/15;
+    set_real_ip_from 104.16.0.0/13;
+    set_real_ip_from 104.24.0.0/14;
+    set_real_ip_from 172.64.0.0/13;
+    set_real_ip_from 131.0.72.0/22;
+
+    # Cloudflare IPv6 addresses
+    set_real_ip_from 2400:cb00::/32;
+    set_real_ip_from 2606:4700::/32;
+    set_real_ip_from 2803:f800::/32;
+    set_real_ip_from 2405:b500::/32;
+    set_real_ip_from 2405:8100::/32;
+    set_real_ip_from 2a06:98c0::/29;
+    set_real_ip_from 2c0f:f248::/32;
 
     real_ip_header CF-Connecting-IP;
 
@@ -82,8 +105,7 @@ let
 
   spamnoticer_static_cfg = {
     #postgrest_url = "https://pgrest-spam.leftychan.net";
-    #postgrest_subdomain = "pgrest-spam";
-    postgrest_url = "http://157.173.196.94:3000";
+    postgrest_subdomain = "pgrest-spam";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
     website_urls = {
       leftychan = "https://leftychan.net";
@@ -226,7 +248,7 @@ in
 
       listen = [
         { addr = "0.0.0.0"; port = 80; ssl = false; }
-        #{ addr = "0.0.0.0"; port = 443; ssl = true; }
+        { addr = "0.0.0.0"; port = 443; ssl = true; }
       ];
     };
 
