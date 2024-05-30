@@ -157,7 +157,7 @@ in
         "dev-spamnoticer.leftychan.net"
         "dev-pgrest-spam.leftychan.net"
         "cytube-dev.leftychan.net"
-        "drama.leftychan.net"
+        #"drama.leftychan.net"
         "spamnoticer.leftychan.net"
         "pgrest-spam.leftychan.net"
         "netdata.leftychan.net"
@@ -276,15 +276,15 @@ in
       ];
     };
 
-    virtualHosts."drama.leftychan.net" = {
-      useACMEHost = domain;
-      forceSSL = true;
-      root = "/srv/http/drama";
-      listen = [
-        { addr = "0.0.0.0"; port = 80; ssl = false; }
-        { addr = "0.0.0.0"; port = 443; ssl = true; }
-      ];
-    };
+    # virtualHosts."drama.leftychan.net" = {
+    #   useACMEHost = domain;
+    #   forceSSL = true;
+    #   root = "/srv/http/drama";
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 80; ssl = false; }
+    #     { addr = "0.0.0.0"; port = 443; ssl = true; }
+    #   ];
+    # };
 
     # virtualHosts."dev.leftychan.net" = {
     #   serverAliases = [
