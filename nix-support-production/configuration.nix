@@ -67,12 +67,6 @@ in
     22   # ssh
     80	 # http
     443  # https
-
-    #DELETEME temporary
-    #8084 #netdata 
-    # 3300 #spamnoticer
-    #3000 #postgrest
-    #8300 #spamnoticer
   ];
 
   networking.hostName = "Spaceship";

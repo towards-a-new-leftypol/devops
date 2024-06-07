@@ -38,8 +38,6 @@ let
     set_real_ip_from 2c0f:f248::/32;
 
     real_ip_header CF-Connecting-IP;
-
-    add_header Onion-Location http://${onion}$request_uri;
   '';
 
 
@@ -187,7 +185,9 @@ in
         "= /.well-known/matrix/client".extraConfig = mkWellKnown clientConfig; 
       };
 
-      extraConfig = cloudflareExtraConfig;
+      extraConfig = cloudflareExtraConfig + ''
+        add_header Onion-Location http://${onion}$request_uri;
+      '';
 
       listen = [
         { addr = "0.0.0.0"; port = 80; ssl = false; }
@@ -322,7 +322,7 @@ in
 
       locations = spamnoticer_common_location_block;
 
-      extraConfig = ''
+      extraConfig = cloudflareExtraConfig + ''
         add_header Onion-Location http://spamnoticer.${onion}$request_uri;
       '';
 
