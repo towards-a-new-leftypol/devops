@@ -46,8 +46,6 @@ in
 
   time.timeZone = "UTC";
 
-  nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
-
   services.postgrest = {
     enable = true;
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
