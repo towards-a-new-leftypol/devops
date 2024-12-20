@@ -62,7 +62,7 @@ in
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      haskellPackages.postgrest
+      postgrest
     ];
 
     systemd.services.postgrest = {
@@ -74,7 +74,7 @@ in
         User = cfg.user;
         Group = cfg.group;
         #Restart = "on-failure";
-        ExecStart = "${pkgs.haskellPackages.postgrest}/bin/postgrest ${configFileLocation}";
+        ExecStart = "${pkgs.postgrest}/bin/postgrest ${configFileLocation}";
         KillSignal = "SIGTERM";
       };
     };

@@ -69,7 +69,8 @@ in
   ];
 
   networking.hostName = "LPDev";
-  networking.nameservers = [ "213.186.33.99" ];
+  #networking.nameservers = [ "213.186.33.99" ];
+  #networking.interfaces.eth0.useDHCP = true;
 
   system.stateVersion = "23.05";
 }
