@@ -40,7 +40,7 @@ in
 
       # initialScript = initScript;
 
-      extraPlugins = [
+      extensions = [
         spgist
       ];
   };

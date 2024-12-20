@@ -13,7 +13,7 @@ in
     ./mysql.nix
     ./lainchan.nix
     #./mediawiki.nix
-    ./cytube-nix/cytube.nix
+    #./cytube-nix/cytube.nix
     ./postgresql.nix
     ./postgrest.nix
     ./spamnoticer.nix
@@ -39,7 +39,7 @@ in
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
+  #nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
 
   services.postgrest = {
     enable = true;

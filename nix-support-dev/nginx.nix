@@ -78,6 +78,7 @@ in
 
     recommendedTlsSettings = false;
 
+    /*
     virtualHosts."cytube_dev.leftypol.org" = {
       locations = {
         "/" = {
@@ -90,6 +91,7 @@ in
         { addr = "0.0.0.0"; port = 8080; ssl = false; }
       ];
     };
+    */
 
     virtualHosts.${domain} = {
       serverAliases = [ "dev.leftychan.net" ];

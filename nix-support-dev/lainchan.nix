@@ -69,6 +69,7 @@ in
     maxMemory = 1024;
   };
 
+  /*
   services.cytube = {
     enable = true;
     httpPort = 8083;
@@ -82,5 +83,6 @@ in
       password = lib.fileContents ./secrets/cytube/database-password;
     };
   };
+  */
 }
 
