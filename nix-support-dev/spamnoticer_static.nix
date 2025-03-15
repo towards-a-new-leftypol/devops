@@ -4,11 +4,14 @@ pkgs.stdenv.mkDerivation {
   pname = "spamnoticer-static";
   version = "0.0.3";
 
+  /*
   src = builtins.fetchGit {
     url = "https://git.leftychan.net/0/spamnoticer_static.git";
     #ref = "master";
     rev = "b8aab0c258ee4602eb90e87de463619d15ab165b";
   };
+  */
+  src = ./spamnoticer_static;
 
   installPhase = ''
     mkdir -p $out

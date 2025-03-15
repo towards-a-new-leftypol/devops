@@ -1,92 +1,104 @@
 { config, pkgs, lib, ... }:
 
 let
-  cfg = config.services.postgrest;
-
-  postgrestConfig = ''
-    db-uri = "${cfg.connectionString}"
-    db-schema = "${cfg.schemaName}"
-    db-anon-role = "${cfg.anonRole}"
-    jwt-secret = "${cfg.jwtSecret}"
-    secret-is-base64 = true
-  '';
-
-  configFileLocation = pkgs.writeText "postgrest.cfg" postgrestConfig;
-in
-
-{
-  options = {
-    services.postgrest = with lib; {
-      enable = mkOption {
-        default = false;
-        type = types.bool;
-        description = "Enable PostgREST service";
+  instanceModule = { config, ... }: {
+    options = with lib.types; {
+      connectionString = lib.mkOption {
+        type = str;
+        description = "PostgreSQL connection string";
+        example = "postgres://user:password@host:port/db";
       };
 
-      connectionString = mkOption {
-        type = types.str;
-        description = "Postgresql connection string";
-        example = "postgres://pg_username:pg_password@192.168.1.11:5432/db_name";
-      };
-
-      schemaName = mkOption {
-        type = types.str;
-        description = "Postgresql schema the database is in";
+      schemaName = lib.mkOption {
+        type = str;
         default = "public";
+        description = "PostgreSQL schema name";
       };
 
-      anonRole = mkOption {
-        type = types.str;
-        description = "Postgresql role that will be used for unauthenticated access.";
+      anonRole = lib.mkOption {
+        type = str;
+        description = "PostgreSQL anonymous role";
         example = "anonymous";
       };
 
-      jwtSecret = mkOption {
-        type = types.str;
-        description = "base64 encoded jwt secret (see postgrest quick start documentation)";
+      jwtSecret = lib.mkOption {
+        type = str;
+        description = "Base64-encoded JWT secret";
       };
 
-      user = mkOption {
-        type = types.str;
+      user = lib.mkOption {
+        type = str;
         default = "postgrest";
-        description = "User the PostgREST server will run as";
+        description = "User to run the service as";
       };
 
-      group = mkOption {
-        type = types.str;
+      group = lib.mkOption {
+        type = str;
         default = "postgrest";
-        description = "Group the PostgREST server will run as";
+        description = "Group to run the service as";
+      };
+
+      package = lib.mkOption {
+        type = package;
+        default = pkgs.postgrest;
+        description = "PostgREST package to use";
+      };
+
+      port = lib.mkOption {
+        type = port;
+        default = 3000;
+        description = "Port to listen on";
       };
     };
   };
+in
 
-  config = lib.mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [
-      postgrest
-    ];
+{
+  options.services.postgrest = lib.mkOption {
+    type = with lib.types; attrsOf (submodule instanceModule);
+    default = {};
+    description = "Multiple PostgREST instances";
+  };
 
-    systemd.services.postgrest = {
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
+  config = lib.mkIf (config.services.postgrest != {}) {
+    users.groups = lib.genAttrs
+      (lib.unique (lib.concatMap (i: [i.group]) (lib.attrValues config.services.postgrest)))
+      (name: {});
 
-      serviceConfig = {
-        Type = "simple";
-        User = cfg.user;
-        Group = cfg.group;
-        #Restart = "on-failure";
-        ExecStart = "${pkgs.postgrest}/bin/postgrest ${configFileLocation}";
-        KillSignal = "SIGTERM";
+    users.users = lib.foldl' (acc: instanceCfg:
+      acc // {
+        ${instanceCfg.user} = {
+          group = instanceCfg.group;
+          isSystemUser = true;
+        };
+      }
+    ) {} (lib.attrValues config.services.postgrest);
+
+    systemd.services = lib.mapAttrs' (name: instanceCfg: let
+      configFile = pkgs.writeText "postgrest-${name}.conf" ''
+        db-uri = "${instanceCfg.connectionString}"
+        db-schema = "${instanceCfg.schemaName}"
+        db-anon-role = "${instanceCfg.anonRole}"
+        jwt-secret = "${instanceCfg.jwtSecret}"
+        secret-is-base64 = true
+        server-port = ${toString instanceCfg.port}
+      '';
+    in {
+      name = "postgrest-${name}";
+      value = {
+        after = [ "network.target" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "simple";
+          User = instanceCfg.user;
+          Group = instanceCfg.group;
+          ExecStart = "${instanceCfg.package}/bin/postgrest ${configFile}";
+          KillSignal = "SIGTERM";
+          #Restart = "on-failure";
+        };
       };
-    };
+    }) config.services.postgrest;
 
-    users.groups = {
-      ${cfg.group} = {};
-    };
-
-    users.extraUsers.${cfg.user} = {
-      group = cfg.group;
-      isSystemUser = true;
-    };
-
+    environment.systemPackages = lib.attrValues (lib.mapAttrs (_: i: i.package) config.services.postgrest);
   };
 }

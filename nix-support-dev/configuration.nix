@@ -2,6 +2,7 @@
 
 let
   spamnoticer_dbpassword = lib.fileContents ./secrets/spamnoticer/dbpassword;
+  chan_archiver_password = lib.fileContents ./secrets/chan_archives/chan_archives_dbpassword;
 
 in
 
@@ -41,11 +42,16 @@ in
 
   #nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
 
-  services.postgrest = {
-    enable = true;
+  services.postgrest."leftypol_test" = {
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
     anonRole = "leftypol_anon";
     jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
+  };
+
+  services.postgrest."chan_archives" = {
+    connectionString = "postgres://chan_archiver:${chan_archiver_password}@localhost:5432/chan_archives";
+    anonRole = "chan_archive_anon";
+    jwtSecret = lib.fileContents ./secrets/chan_archives/jwt_secret;
   };
 
   services.spamnoticer = {

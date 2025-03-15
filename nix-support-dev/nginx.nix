@@ -53,12 +53,12 @@ let
   };
 
   spamnoticer_static_cfg = {
-    #postgrest_url = "https://dev-pgrest-spam.leftychan.net";
+    postgrest_url = "http://localhost:3000";
     jwt = builtins.readFile ./secrets/spamnoticer/jwt;
-    postgrest_subdomain = "dev-pgrest-spam";
+    #postgrest_subdomain = "dev-pgrest-spam";
     website_urls = {
       leftychan.net = "https://leftychan.net";
-      leftychan_dev = "http://dev.leftychan.net";
+      leftychan_dev = "http://localhost:8080";
     };
   };
 
