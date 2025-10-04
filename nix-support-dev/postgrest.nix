@@ -54,15 +54,15 @@ let
 in
 
 {
-  options.services.postgrest = lib.mkOption {
+  options.services.my_postgrest = lib.mkOption {
     type = with lib.types; attrsOf (submodule instanceModule);
     default = {};
     description = "Multiple PostgREST instances";
   };
 
-  config = lib.mkIf (config.services.postgrest != {}) {
+  config = lib.mkIf (config.services.my_postgrest != {}) {
     users.groups = lib.genAttrs
-      (lib.unique (lib.concatMap (i: [i.group]) (lib.attrValues config.services.postgrest)))
+      (lib.unique (lib.concatMap (i: [i.group]) (lib.attrValues config.services.my_postgrest)))
       (name: {});
 
     users.users = lib.foldl' (acc: instanceCfg:
@@ -72,7 +72,7 @@ in
           isSystemUser = true;
         };
       }
-    ) {} (lib.attrValues config.services.postgrest);
+    ) {} (lib.attrValues config.services.my_postgrest);
 
     systemd.services = lib.mapAttrs' (name: instanceCfg: let
       configFile = pkgs.writeText "postgrest-${name}.conf" ''
@@ -80,7 +80,7 @@ in
         db-schema = "${instanceCfg.schemaName}"
         db-anon-role = "${instanceCfg.anonRole}"
         jwt-secret = "${instanceCfg.jwtSecret}"
-        secret-is-base64 = true
+        secret-is-base64 = false
         server-port = ${toString instanceCfg.port}
       '';
     in {
@@ -97,8 +97,8 @@ in
           #Restart = "on-failure";
         };
       };
-    }) config.services.postgrest;
+    }) config.services.my_postgrest;
 
-    environment.systemPackages = lib.attrValues (lib.mapAttrs (_: i: i.package) config.services.postgrest);
+    environment.systemPackages = lib.attrValues (lib.mapAttrs (_: i: i.package) config.services.my_postgrest);
   };
 }

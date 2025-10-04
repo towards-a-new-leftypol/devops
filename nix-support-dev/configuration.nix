@@ -40,16 +40,18 @@ in
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
 
-  services.postgrest."leftypol_test" = {
+  services.my_postgrest."leftypol_test" = {
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
     anonRole = "leftypol_anon";
     jwtSecret = lib.fileContents ./secrets/spamnoticer/jwt_secret;
+    port = 3000;
   };
 
-  services.postgrest."chan_archives" = {
+  services.my_postgrest."chan_archives" = {
     connectionString = "postgres://chan_archiver:${chan_archiver_password}@localhost:5432/chan_archives";
     anonRole = "chan_archive_anon";
     jwtSecret = lib.fileContents ./secrets/chan_archives/jwt_secret;
+    port = 3001;
   };
 
   services.spamnoticer = {
