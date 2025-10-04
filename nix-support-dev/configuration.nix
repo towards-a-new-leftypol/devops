@@ -14,7 +14,7 @@ in
     ./mysql.nix
     ./lainchan.nix
     #./mediawiki.nix
-    #./cytube-nix/cytube.nix
+    ./cytube-nix/cytube.nix
     ./postgresql.nix
     ./postgrest.nix
     ./spamnoticer.nix
@@ -39,8 +39,6 @@ in
   services.openssh.startWhenNeeded = false;
   services.openssh.settings.PasswordAuthentication = false;
   systemd.services.sshd.wantedBy = lib.mkOverride 40 [ "multi-user.target" ];
-
-  #nixpkgs.overlays = [ (import ./postgrest-overlay.nix { inherit pkgs; }) ];
 
   services.postgrest."leftypol_test" = {
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
