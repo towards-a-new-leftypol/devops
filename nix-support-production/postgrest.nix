@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  cfg = config.services.postgrest;
+  cfg = config.services.my_postgrest;
 
   postgrestConfig = ''
     db-uri = "${cfg.connectionString}"
@@ -16,7 +16,7 @@ in
 
 {
   options = {
-    services.postgrest = with lib; {
+    services.my_postgrest = with lib; {
       enable = mkOption {
         default = false;
         type = types.bool;

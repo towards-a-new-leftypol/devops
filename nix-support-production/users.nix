@@ -10,7 +10,7 @@ ____/ /__  /_/ / /_/ // /__ /  __/(__  )_  / / /  / __  /_/ /
 /____/ _  .___/\__,_/ \___/ \___//____/ /_/ /_//_/  _  .___/ 
        /_/                                          /_/      
 
-NixOS 24.05 - Leftychan.net production server.
+NixOS 25.05 - Leftychan.net production server.
   '';
 
   users.extraUsers.admin = {

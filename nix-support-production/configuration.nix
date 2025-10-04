@@ -46,7 +46,7 @@ in
 
   time.timeZone = "UTC";
 
-  services.postgrest = {
+  services.my_postgrest = {
     enable = true;
     connectionString = "postgres://spam_noticer:${spamnoticer_dbpassword}@localhost:5432/leftypol_test";
     anonRole = "leftypol_anon";
