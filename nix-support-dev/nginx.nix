@@ -2,7 +2,7 @@
 
 let
   app = "lainchan";
-  domain = "leftychan.net";
+  domain = "transportation.volguine.com";
   dataDir = "/srv/http/${app}.leftypol.org";
 
   leftypol_common_location_block = {
@@ -106,77 +106,75 @@ in
         set_real_ip_from ::1;
 
         real_ip_header CF-Connecting-IP;
-
-        add_header Onion-Location http://wz6bnwwtwckltvkvji6vvgmjrfspr3lstz66rusvtczhsgvwdcixgbyd.onion$request_uri;
       '';
 
       listen = [
-        { addr = "0.0.0.0"; port = 8080; ssl = false; }
+        { addr = "0.0.0.0"; port = 80; ssl = false; }
       ];
     };
 
-    virtualHosts."dev-pgrest-spam.leftychan.net" = {
-      locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:3000";
-          recommendedProxySettings = true;
-        };
-      };
+    # virtualHosts."dev-pgrest-spam.leftychan.net" = {
+    #   locations = {
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:3000";
+    #       recommendedProxySettings = true;
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8081; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8081; ssl = false; }
+    #   ];
+    # };
 
-    # Proxy to authenticate SpamNoticer users
-    virtualHosts."dev-spamnoticer.leftychan.net" = {
-      locations = {
-        "/stylesheets" = {
-          root = dataDir;
-          extraConfig = ''
-            expires 1s;
-          '';
-        };
+    # # Proxy to authenticate SpamNoticer users
+    # virtualHosts."dev-spamnoticer.leftychan.net" = {
+    #   locations = {
+    #     "/stylesheets" = {
+    #       root = dataDir;
+    #       extraConfig = ''
+    #         expires 1s;
+    #       '';
+    #     };
 
-        "= /main.js" = {
-          root = dataDir;
-          extraConfig = ''
-            expires 1s;
-          '';
-        };
+    #     "= /main.js" = {
+    #       root = dataDir;
+    #       extraConfig = ''
+    #         expires 1s;
+    #       '';
+    #     };
 
-        "/" = {
-          root = dataDir;
-          index = "auth-proxy.php";
-          tryFiles = "$uri /auth-proxy.php";
+    #     "/" = {
+    #       root = dataDir;
+    #       index = "auth-proxy.php";
+    #       tryFiles = "$uri /auth-proxy.php";
 
-          extraConfig = ''
-            fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
-          '';
-        };
+    #       extraConfig = ''
+    #         fastcgi_pass unix:${config.services.phpfpm.pools.${app}.socket};
+    #       '';
+    #     };
 
-      };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8082; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8082; ssl = false; }
+    #   ];
+    # };
 
     # SpamNoticer service (doesn't have own authentication)
-    virtualHosts.spam = {
-      locations = {
-        "=/static/settings.json" = {
-          alias = spamnoticer_static_cfg_filename;
-        };
-        "/" = {
-          proxyPass = "http://127.0.0.1:${builtins.toString config.services.spamnoticer.port}";
-        };
-      };
+    # virtualHosts.spam = {
+    #   locations = {
+    #     "=/static/settings.json" = {
+    #       alias = spamnoticer_static_cfg_filename;
+    #     };
+    #     "/" = {
+    #       proxyPass = "http://127.0.0.1:${builtins.toString config.services.spamnoticer.port}";
+    #     };
+    #   };
 
-      listen = [
-        { addr = "0.0.0.0"; port = 8300; ssl = false; }
-      ];
-    };
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 8300; ssl = false; }
+    #   ];
+    # };
   };
 
   users.users.${app} = {

@@ -3,13 +3,8 @@
 {
   users.mutableUsers = false;
   users.motd = ''
-    _/        _/_/_/    _/_/_/                          
-   _/        _/    _/  _/    _/    _/_/    _/      _/   
-  _/        _/_/_/    _/    _/  _/_/_/_/  _/      _/    
- _/        _/        _/    _/  _/          _/  _/       
-_/_/_/_/  _/        _/_/_/      _/_/_/      _/          
-
-(leftypol development container, NixOS 25.05)
+LPDEV-Linixy
+(lainchan development container, NixOS 25.05)
   '';
 
   users.extraUsers.admin = {

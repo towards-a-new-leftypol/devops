@@ -63,24 +63,5 @@ in
       exiftool
     ]);
   };
-
-  services.memcached = {
-    enable = false;
-    maxMemory = 1024;
-  };
-
-  services.cytube = {
-    enable = false;
-    httpPort = 8083;
-    publicPort = 8891;
-
-    # Make sure you create the secrets directory with these files
-    youtube-v3-key = lib.fileContents ./secrets/cytube/youtube-v3-key;
-    cookie-secret = lib.fileContents ./secrets/cytube/cookie-secret;
-    cookie-domain = "tv.leftypol.org";
-    database = {
-      password = lib.fileContents ./secrets/cytube/database-password;
-    };
-  };
 }
 
