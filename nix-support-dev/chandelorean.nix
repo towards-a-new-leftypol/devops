@@ -149,8 +149,7 @@ in
           Type = "simple";
           User = instanceCfg.user;
           Group = instanceCfg.group;
-          WorkingDirectory = "/var/lib/chandelorean";
-          ExecStart = "${instanceCfg.package}/bin/chandelorean +RTS -N2 -RTS -s ${settingsFile}";
+          ExecStart = "${instanceCfg.package}/bin/chan-delorean-consoomer +RTS -N2 -RTS -s ${settingsFile}";
           Restart = "on-failure";
           RestartSec = 5;
           LimitNOFILE = "65536";

@@ -95,9 +95,20 @@ in
     };
     */
 
-    virtualHosts.${domain} = {
-      serverAliases = [ "dev.leftychan.net" ];
+    virtualHosts."boards.volguine.com" = {
+      locations = {
+        "/" = {
+          proxyPass = "http://127.0.0.1:8100";
+          proxyWebsockets = true;
+        };
+      };
 
+      listen = [
+        { addr = "0.0.0.0"; port = 80; ssl = false; }
+      ];
+    };
+
+    virtualHosts.${domain} = {
       locations = leftypol_common_location_block;
 
       # Since we are proxied by cloudflare, read the real ip from the header

@@ -49,6 +49,12 @@ let
         default = 3000;
         description = "Port to listen on";
       };
+
+      enableAggregates = lib.mkOption {
+        type = bool;
+        default = false;
+        description = "Enable support for aggregate functions (e.g., count, sum) in queries";
+      };
     };
   };
 in
@@ -82,6 +88,7 @@ in
         jwt-secret = "${instanceCfg.jwtSecret}"
         secret-is-base64 = false
         server-port = ${toString instanceCfg.port}
+        ${lib.optionalString instanceCfg.enableAggregates "db-aggregates-enabled = true"}
       '';
     in {
       name = "postgrest-${name}";

@@ -20,6 +20,7 @@ in
     ./postgrest.nix
     # ./spamnoticer.nix
     ./chandelorean.nix
+    ./chandlr-server.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -54,6 +55,7 @@ in
     anonRole = "chan_archive_anon";
     jwtSecret = lib.fileContents ./secrets/chan_archives/jwt_secret;
     port = 3001;
+    enableAggregates = true;
   };
 
   # services.spamnoticer = {
@@ -76,20 +78,33 @@ in
         }
     ];
 
-    media_root_path = "/srv/http/chan_archive_media";
+    group = "nginx";
     postgrest_url = "http://localhost:3001";
+    media_root_path = "/srv/http/chan_archive_media";
     jwt = chan_archiver_pgrest_jwt;
+  };
+
+  services.chandlr-server.transportation = {
+    postgrestUrl = "https://transportation-pgrest.volguine.com";
+    jwt = chan_archiver_pgrest_jwt;
+    postgrestFetchCount = 200;
+    mediaRoot = "https://transportation-archive-media.volguine.com";
+    # mediaRootPath = config.services.chandelorean.transportation.media_root_path;
+    mediaRootPath = "/srv/http/chan_archive_media";
+    admin = false;
+    port = 8100;
   };
 
   networking.firewall.allowedTCPPorts = [
     22   # ssh
+    80
     8080 # http
-    443  # https
-    8081 # cytube http
+    # 443  # https
+    # 8081 # cytube http
+    3001   # postgrest chan_archives
     # 3000 # postgREST (should be open on dev only)
     # 8300 # SpamNoticer
     # 5432 # postgresql
-    #80   # apache (mediawiki)
   ];
 
   networking.hostName = "LPDev-Linixy";
