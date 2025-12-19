@@ -66,6 +66,7 @@ let
 
   spamnoticer_static_cfg_filename = pkgs.writeText "settings.json" (builtins.toJSON spamnoticer_static_cfg);
 
+  chandlr-miso-bin = import ./chandlr-miso-bin.nix { inherit pkgs; };
 in
 
 {
@@ -102,6 +103,48 @@ in
           proxyWebsockets = true;
         };
       };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 80; ssl = false; }
+      ];
+    };
+
+    # #deepseek
+    # virtualHosts."boards-static.volguine.com" = {
+    #   root = "${chandlr-miso-bin}/static";
+
+    #   locations."/" = {
+    #     tryFiles = "$uri $uri/ /index.html";
+    #   };
+
+    #   listen = [
+    #     { addr = "0.0.0.0"; port = 80; ssl = false; }
+    #   ];
+    # };
+
+    #qwen
+    virtualHosts."boards-static.volguine.com" = {
+      root = chandlr-miso-bin;
+
+      locations."/static/" = {
+      };
+
+      locations."/" = {
+        # index = [];
+        tryFiles = "$uri /static/index.html";
+        extraConfig = ''
+          autoindex off;
+          index disabled;
+        '';
+      };
+
+      listen = [
+        { addr = "0.0.0.0"; port = 80; ssl = false; }
+      ];
+    };
+
+    virtualHosts."transportation-archive-media.volguine.com" = {
+      root = "/srv/http/chan_archive_media";
 
       listen = [
         { addr = "0.0.0.0"; port = 80; ssl = false; }

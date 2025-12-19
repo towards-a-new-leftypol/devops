@@ -1,19 +1,14 @@
 { config, pkgs, lib, ... }:
 
 let
-  chandlr-miso-bin = pkgs.fetchFromGitHub {
-    owner = "Zer0-";
-    repo = "chandlr-miso-bin";
-    rev = "e8e2ba6e381c22c83fe8a464697363996b1563e1";
-    sha256 = "sha256-FrrCgFaI9yiqtV40IcgjZpVBJIuG8LRhbQ4yK0mI+bM=";
-  };
+  chandlr-miso-bin = import ./chandlr-miso-bin.nix { inherit pkgs; };
 
   chandlr-server-src = pkgs.fetchFromGitHub {
     owner = "towards-a-new-leftypol";
     repo = "chandlr-server";
-    rev = "9b0eb083f257f060f78db37dff2f59d52d94c27c";
+    rev = "5015b8e343ec8f5c98438540a6fa0643c92ed40c";
     fetchSubmodules = true;
-    sha256 = "sha256-GlSJEcr/NBVuxbWN0VDCZJ9OAJrJ3Ue2MSp3z6D8OH4=";
+    sha256 = "sha256-j/t/J543vq7zpM0WJHjiqAL4nNSBscVRHq3zXUM2siA=";
   };
 
   instanceModule = { config, ... }: {
@@ -93,7 +88,7 @@ let
         default = 8080;
         description = "Port to listen on";
       };
-      
+
       extraEnvironment = lib.mkOption {
         type = attrsOf str;
         default = {};
