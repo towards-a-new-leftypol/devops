@@ -24,7 +24,7 @@ in
   environment.systemPackages = with pkgs; [
     neovim
     wget
-    gitAndTools.gitFull
+    gitFull
     inetutils
     python3
     ripgrep

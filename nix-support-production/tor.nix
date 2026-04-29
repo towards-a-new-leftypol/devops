@@ -5,7 +5,7 @@
     enable = true;
 
     # uncomment for more logging if relay daemon keeps crashing:
-    # settings.Log = [ "notice syslog" "info syslog" ];
+    settings.Log = [ "notice syslog" "info syslog" ];
 
     relay.onionServices.leftypol-onion = {
       version = 3;

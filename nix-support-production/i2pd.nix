@@ -17,7 +17,7 @@
         keys = "leftychmxz3wczbd4add4atspbqevzrtwf2sjobm3waqosy2dbua.dat";
         inPort = 80;
         address = "127.0.0.1";
-        destination = "127.0.0.1";
+        # destination = "127.0.0.1";
         port = 8081;
         inbound.length = 1;
         outbound.length = 1;
