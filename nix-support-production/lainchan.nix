@@ -79,6 +79,7 @@ in
     concurrentUsers = 500;
     database = {
       password = lib.fileContents ./secrets/cytube/database-password;
+      server = "127.0.0.1";
     };
   };
 }
