@@ -2,7 +2,10 @@
 
 let
   app = "lainchan";
-  phpPkg = pkgs.php83;
+  phpPkg = pkgs.php83.withExtensions ({ all, enabled }: with all; enabled ++ [
+    memcached
+    tidy
+  ]);
   phpPkgPackages = pkgs.php83Packages;
   phpPkgExtensions = pkgs.php83Extensions;
 in
@@ -18,7 +21,6 @@ in
     libiconv
     phpPkg
     phpPkgPackages.composer
-    phpPkgExtensions.memcached
   ];
 
   # Need to add a row to theme_settings:
@@ -46,7 +48,6 @@ in
     phpOptions = ''
       upload_max_filesize = 90m
       post_max_size = 90m
-      extension=${pkgs.phpExtensions.memcached}/lib/php/extensions/memcached.so
     '';
 
     phpEnv."PATH" = lib.makeBinPath ( with pkgs; [
